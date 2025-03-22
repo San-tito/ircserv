@@ -1,20 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   typedefs.h                                         :+:      :+:    :+:   */
+/*   logging.cc                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/22 20:34:31 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/22 23:25:17 by sguzman          ###   ########.fr       */
+/*   Created: 2025/03/22 21:30:43 by sguzman           #+#    #+#             */
+/*   Updated: 2025/03/22 23:29:33 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TYPEDEFS_H
-# define TYPEDEFS_H
+#include "logging.h"
 
-class	Server;
-class	Log;
-class	Listener;
+Log::Log(void)
+{
+	startup_time = time(0);
+}
 
-#endif /* TYPEDEFS_H */
+Log::~Log(void)
+{
+	char	str[64];
+
+	strftime(str, 64, "%H:%M:%S", localtime(&startup_time));
+	std::cout << "[" << str << "] " << buffer.str() << '\n';
+}

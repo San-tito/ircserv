@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:20:19 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/22 20:48:12 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/22 22:47:43 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,21 @@ int	ParsePort(char *arg)
 
 int	main(int argc, char **argv)
 {
+	int	port;
+
 	if (argc != 3)
 	{
 		std::cerr << "Usage: " << argv[0] << " <port> <password>\n";
 		return (EXIT_FAILURE);
 	}
-	int port(ParsePort(argv[1]));
+	port = ParsePort(argv[1]);
 	if (port < 0)
 	{
 		std::cerr << "illegal port number " << argv[1] << "!\n";
 		return (EXIT_FAILURE);
 	}
 	new Server(port, argv[2]);
-	// Server::instance->Run();
+	Server::instance->Run();
 	delete Server::instance;
 	return (EXIT_SUCCESS);
 }
