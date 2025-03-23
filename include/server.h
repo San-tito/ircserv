@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 01:53:57 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 02:57:11 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class Server
 
 	std::string password(void) const;
 	time_t startup_time(void) const;
+	EventManager *events(void) const;
 
   private:
 	void SetSignals(void);

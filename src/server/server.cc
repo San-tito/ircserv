@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 01:28:26 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 02:59:45 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ Server::~Server(void)
 void Server::Run(void)
 {
 	while (true)
-		;
+	{
+		events_.Dispatch();
+	}
 }
 
 void Server::Exit(int status)
@@ -49,6 +51,11 @@ std::string Server::password(void) const
 time_t Server::startup_time(void) const
 {
 	return (this->startup_time_);
+}
+
+EventManager &Server::events(void) const
+{
+	return (this->events_);
 }
 
 void Server::SetSignals(void)
