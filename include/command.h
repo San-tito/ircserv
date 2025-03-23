@@ -1,32 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   command.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 16:05:22 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 16:04:25 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_HPP
-# define PARSER_HPP
+#ifndef COMMAND_H
+# define COMMAND_H
 
-# include "command.h"
 # include "user.h"
-# include <map>
+# include <string>
+# include <vector>
 
-class CommandParser
+class Command
 {
   public:
-	CommandParser(void);
-	~CommandParser(void);
+	Command(std::string name, int min, int max);
+	virtual ~Command(void);
 
-	void ProcessCommand(User *user, std::string const &command);
+	bool isUserRegistered(User *user);
+	bool isParamsValid(int size);
+
+	virtual void execute(User *user,
+			const std::vector<std::string> &params) = 0;
+
+	class Invite;
 
   private:
-	std::map<std::string, Command *> commands_;
+	std::string name_;
+	int min_;
+	int max_;
 };
 
-#endif /* PARSER_HPP */
+class Command::Invite : public Command
+{
+  public:
+	Invite(void);
+
+	void execute(User *user, const std::vector<std::string> &params);
+};
+
+#endif /* COMMAND_H */
