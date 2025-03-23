@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:33:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 14:12:33 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 15:14:03 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 # include <ctime>
 # include <string>
 
+# define READBUFFER_LEN 2048
+# define MAX_COMMANDS 3
+# define COMMAND_LEN 512
+
 class User
 {
   public:
@@ -24,9 +28,12 @@ class User
 
 	void Read(void);
 	void Write(void);
+	void Request(void);
 	int socket(void) const;
-	time_t last_activity(void) const;
 	bool registered(void) const;
+	time_t last_activity(void) const;
+	std::string rbuf(void) const;
+	std::string wbuf(void) const;
 
   private:
 	int socket_;

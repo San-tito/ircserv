@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 14:18:04 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 15:03:41 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,39 @@ void UserManager::AddUser(int fd)
 
 void UserManager::DelUser(int fd)
 {
-	Log() << "Connection " << fd << " closed\n";
+	Log() << "Connection " << fd << " closed";
 	delete (users[fd]);
 	users.erase(fd);
 	Server::instance->events().DelEvent(fd);
 }
 
+void UserManager::Read(void)
+{
+	std::map<int, User *>::iterator it(users.begin());
+	while (it != users.end())
+	{
+		User *user(it->second);
+		++it;
+		if (!user->rbuf().empty())
+			user->Request();
+	}
+}
+
 void UserManager::Read(int fd)
 {
 	users[fd]->Read();
+}
+
+void UserManager::Write(void)
+{
+	std::map<int, User *>::iterator it(users.begin());
+	while (it != users.end())
+	{
+		User *user(it->second);
+		it++;
+		if (!user->wbuf().empty())
+			Server::instance->events().MaskEvent(user->socket(), POLLOUT);
+	}
 }
 
 void UserManager::Write(int fd)
@@ -53,9 +77,10 @@ void UserManager::CheckTimeouts(void)
 {
 	time_t now(time(NULL));
 	std::map<int, User *>::iterator it(users.begin());
-	for (; it != users.end(); it++)
+	while (it != users.end())
 	{
 		User *user(it->second);
+		++it;
 		if (!user->registered() && user->last_activity() < now - TIMEOUT)
 		{
 			Log() << "Unregistered connection " << user->socket() << " timed out";

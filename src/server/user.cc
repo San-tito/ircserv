@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 14:14:57 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 15:36:58 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,69 @@ User::~User(void)
 
 void User::Read(void)
 {
-	static_cast<void>(this->socket_);
+	ssize_t	len;
+	char	buf[READBUFFER_LEN];
+
+	len = read(this->socket_, buf, READBUFFER_LEN);
+	if (len == 0)
+	{
+		Server::instance->users().DelUser(this->socket_);
+		return ;
+	}
+	if (len < 0)
+	{
+		if (errno == EAGAIN)
+			return ;
+		Server::instance->users().DelUser(this->socket_);
+		return ;
+	}
+	buf[len] = '\0';
+	rbuf_ += buf;
 }
 
 void User::Write(void)
 {
-	static_cast<void>(this->socket_);
+	ssize_t	len;
+
+	len = write(this->socket_, wbuf_.c_str(), wbuf_.size());
+	if (len < 0)
+	{
+		if (errno == EAGAIN)
+			return ;
+		Server::instance->users().DelUser(this->socket_);
+		return ;
+	}
+	wbuf_.clear();
+}
+
+void User::Request(void)
+{
+	size_t pos(0);
+	std::string command("");
+	std::string request(rbuf_);
+	for (int i = 0; i < MAX_COMMANDS; i++)
+	{
+		if ((pos = request.find("\r\n")) != std::string::npos)
+		{
+			command = request.substr(0, pos);
+			request.erase(0, pos + 2);
+		}
+		else if ((pos = request.find('\n')) != std::string::npos)
+		{
+			command = request.substr(0, pos);
+			request.erase(0, pos + 1);
+		}
+		else
+			break ;
+		if (command.size() > COMMAND_LEN)
+		{
+			Log() << "Connection " << this->socket_ << " request too long (max ." << COMMAND_LEN << ")";
+			Server::instance->users().DelUser(this->socket_);
+			return ;
+		}
+		rbuf_.clear();
+		Server::instance->parser().ProcessCommand(this, command);
+	}
 }
 
 int User::socket(void) const
@@ -50,4 +107,14 @@ time_t User::last_activity(void) const
 bool User::registered(void) const
 {
 	return (this->registered_);
+}
+
+std::string User::rbuf(void) const
+{
+	return (this->rbuf_);
+}
+
+std::string User::wbuf(void) const
+{
+	return (this->wbuf_);
 }

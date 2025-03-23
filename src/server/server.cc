@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 14:24:05 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 15:36:26 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void Server::Run(void)
 	while (true)
 	{
 		users_.CheckTimeouts();
+		users_.Read();
+		users_.Write();
 		events_.Dispatch();
 	}
 }
@@ -63,6 +65,11 @@ EventManager &Server::events(void)
 UserManager &Server::users(void)
 {
 	return (this->users_);
+}
+
+CommandParser &Server::parser(void)
+{
+	return (this->parser_);
 }
 
 void Server::SetSignals(void)

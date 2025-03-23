@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 13:48:50 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 15:36:09 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "eventmanager.h"
 # include "listener.h"
 # include "logging.h"
+# include "parser.h"
 # include "typedefs.h"
 # include "usermanager.h"
 # include <algorithm>
@@ -42,8 +43,9 @@ class Server
 
 	std::string password(void) const;
 	time_t startup_time(void) const;
-	EventManager &events(void);
 	UserManager &users(void);
+	EventManager &events(void);
+	CommandParser &parser(void);
 
   private:
 	void SetSignals(void);
@@ -52,8 +54,9 @@ class Server
 	time_t startup_time_;
 	std::string password_;
 	Listener *listener_;
-	EventManager events_;
 	UserManager users_;
+	EventManager events_;
+	CommandParser parser_;
 };
 
 #endif /* IRCD_HPP */

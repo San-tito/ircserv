@@ -31,7 +31,7 @@ void Event::New::Callback(short revents)
 	if (!Listener::InitSocket(new_socket))
 		return ;
 	Server::instance->users().AddUser(new_socket);
-	Log() << "Accepted new connection " << new_socket << '!';
+	Log() << "Connection " << new_socket << " accepted";
 }
 
 Event::Client::Client(int socket) : socket_(socket)

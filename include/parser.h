@@ -1,40 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   usermanager.h                                      :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 14:47:20 by sguzman          ###   ########.fr       */
+/*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
+/*   Updated: 2025/03/23 15:40:21 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef USERMANAGER_H
-# define USERMANAGER_H
+#ifndef PARSER_HPP
+# define PARSER_HPP
 
-# include "typedefs.h"
 # include "user.h"
-# include <map>
 
-# define TIMEOUT 20
-
-class UserManager
+class CommandParser
 {
   public:
-	UserManager(void);
-	~UserManager(void);
+	CommandParser(void);
+	~CommandParser(void);
 
-	void AddUser(int fd);
-	void DelUser(int fd);
-	void Read(void);
-	void Read(int fd);
-	void Write(void);
-	void Write(int fd);
-	void CheckTimeouts(void);
-
-  private:
-	std::map<int, User *> users;
+	void ProcessCommand(User *user, std::string const &command);
 };
 
-#endif /* USERMANAGER_H */
+#endif /* PARSER_HPP */
