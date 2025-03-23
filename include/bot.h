@@ -6,12 +6,12 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/22 20:54:39 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 16:13:52 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BOT_HPP
-# define BOT_HPP
+#ifndef BOT_H
+# define BOT_H
 
 # include <algorithm>
 # include <cfloat>
@@ -37,4 +37,4 @@ class Bot
 	static Bot *instance;
 };
 
-#endif /* BOT_HPP */
+#endif /* BOT_H */

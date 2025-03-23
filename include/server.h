@@ -6,12 +6,12 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 15:36:09 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 16:14:38 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#ifndef SERVER_H
+# define SERVER_H
 
 # include "eventmanager.h"
 # include "listener.h"
@@ -59,4 +59,4 @@ class Server
 	CommandParser parser_;
 };
 
-#endif /* IRCD_HPP */
+#endif /* SERVER_H */

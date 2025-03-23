@@ -6,12 +6,12 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 21:26:52 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 12:33:59 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 16:14:17 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOGGING_HPP
-# define LOGGING_HPP
+#ifndef LOGGING_H
+# define LOGGING_H
 
 # include <ctime>
 # include <iostream>
@@ -34,4 +34,4 @@ class Log
 	std::ostringstream buffer_;
 };
 
-#endif /* LOGGING_HPP */
+#endif /* LOGGING_H */

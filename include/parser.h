@@ -6,12 +6,12 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 16:05:22 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 16:14:24 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_HPP
-# define PARSER_HPP
+#ifndef PARSER_H
+# define PARSER_H
 
 # include "command.h"
 # include "user.h"
@@ -29,4 +29,4 @@ class CommandParser
 	std::map<std::string, Command *> commands_;
 };
 
-#endif /* PARSER_HPP */
+#endif /* PARSER_H */
