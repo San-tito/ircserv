@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 15:36:58 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:26:14 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,30 @@ void User::Write(void)
 		return ;
 	}
 	wbuf_.clear();
+}
+
+void User::Write(std::string const &msg)
+{
+	Log() << "Connection " << this->socket_ << ": " << msg;
+	wbuf_ += msg + '\n';
+}
+
+void User::WriteErrUnknownCommand(std::string const &command)
+{
+	Write("421 " + (this->nickname_.empty() ? "*" : this->nickname_) + " "
+		+ command + " :Unknown command");
+}
+
+void User::WriteErrNeedMoreParams(std::string const &command)
+{
+	Write("461 " + (this->nickname_.empty() ? "*" : this->nickname_) + " "
+		+ command + " :Syntax error");
+}
+
+void User::WriteErrNotRegistered(void)
+{
+	Write("451 " + (this->nickname_.empty() ? "*" : this->nickname_)
+		+ " :Connection not registered");
 }
 
 void User::Request(void)

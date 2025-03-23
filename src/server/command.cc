@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 16:05:54 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:27:20 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ bool Command::isUserRegistered(User *user)
 {
 	if (!user->registered())
 	{
-		// ERR_NOTREGISTERED;
+		user->WriteErrNotRegistered();
 		return (false);
 	}
 	return (true);
 }
 
-bool Command::isParamsValid(int size)
+bool Command::isParamsValid(User *user, int size)
 {
 	if (size < min_ || (max_ != -1 && size > max_))
 	{
-		// ERR_NEEDMOREPARAMS;
+		user->WriteErrNeedMoreParams(name_);
 		return (false);
 	}
 	return (true);
@@ -45,12 +45,12 @@ Command::Invite::Invite(void) : Command("INVITE", 2, 2)
 {
 }
 
-void Command::Invite::execute(User *user,
+void Command::Invite::Execute(User *user,
 	const std::vector<std::string> &params)
 {
 	if (!isUserRegistered(user))
 		return ;
-	if (!isParamsValid(params.size()))
+	if (!isParamsValid(user, params.size()))
 		return ;
 	// do stuff
 }

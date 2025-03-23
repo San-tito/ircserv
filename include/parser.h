@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 16:14:24 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 16:55:23 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,18 @@
 # include "user.h"
 # include <map>
 
+# define MAX_PARAMS 15
+
 class CommandParser
 {
   public:
 	CommandParser(void);
 	~CommandParser(void);
 
-	void ProcessCommand(User *user, std::string const &command);
+	void Trim(std::string &str);
+	bool ParseCommand(std::string &request, std::string &command);
+	void ParseParams(std::string &request, std::vector<std::string> &params);
+	void ProcessCommand(User *user, std::string &request);
 
   private:
 	std::map<std::string, Command *> commands_;

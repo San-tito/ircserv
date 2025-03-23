@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:33:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 15:14:03 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:26:34 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ class User
 
 	void Read(void);
 	void Write(void);
+	void Write(std::string const &msg);
+	void WriteErrUnknownCommand(std::string const &command);
+	void WriteErrNeedMoreParams(std::string const &command);
+	void WriteErrNotRegistered(void);
 	void Request(void);
 	int socket(void) const;
 	bool registered(void) const;
