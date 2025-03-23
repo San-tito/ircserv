@@ -41,7 +41,7 @@ class Server
 
 	std::string password(void) const;
 	time_t startup_time(void) const;
-	EventManager *events(void) const;
+	EventManager &events(void);
 
   private:
 	void SetSignals(void);

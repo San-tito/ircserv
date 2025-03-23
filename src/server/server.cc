@@ -53,7 +53,7 @@ time_t Server::startup_time(void) const
 	return (this->startup_time_);
 }
 
-EventManager &Server::events(void) const
+EventManager &Server::events(void)
 {
 	return (this->events_);
 }

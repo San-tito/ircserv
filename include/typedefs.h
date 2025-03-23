@@ -13,10 +13,7 @@
 #ifndef TYPEDEFS_H
 # define TYPEDEFS_H
 
-class	EventManager;
 class	Server;
-class	Log;
-class	Listener;
-class	Event;
+class   Listener;
 
 #endif /* TYPEDEFS_H */

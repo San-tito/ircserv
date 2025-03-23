@@ -1,52 +1,64 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   event.cc                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/23 02:31:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 02:57:25 by sguzman          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "event.h"
+#include "server.h"
+#include "logging.h"
+#include <cerrno>
+#include <cstring>
+#include <sys/socket.h>
+#include <unistd.h>
 
 Event::~Event(void)
 {
 }
 
-Event::Server::Server(int socket) : socket_(socket)
+Event::New::New(int socket) : socket_(socket)
 {
 }
 
-Event::Server::~Server(void)
+Event::New::~New(void)
 {
 }
 
-void Event::Server::Callback(short revents)
+void Event::New::Callback(short revents)
 {
-	static_cast<void>(revents);
-	Log() << "Accepting new connection ...";
-	int new_socket(accept(this->socket_, 0, 0));
-	if (new_socket < 0)
+	if (revents & POLLIN)
 	{
-		Log() << "Can't accept connection: " << strerror(errno) << '!';
-		::Server::instance->Exit(EXIT_FAILURE);
+		Log() << "Accepting new connection ...";
+		int new_socket = accept(this->socket_, 0, 0);
+		if (new_socket < 0)
+		{
+			Log() << "Can't accept connection: " << strerror(errno) << '!';
+			Server::instance->Exit(EXIT_FAILURE);
+		}
+		Server::instance->events().AddEvent<Event::Client>(new_socket, POLLIN);
 	}
-	::Server::instance->events()->AddEvent(new_socket, POLLIN,
-		new Event::Client);
 }
 
-Event::Client::Client(void)
+Event::Client::Client(int socket) : socket_(socket)
 {
 }
 
 Event::Client::~Client(void)
 {
+	close(this->socket_);
 }
 
 void Event::Client::Callback(short revents)
 {
-	(void)revents;
+	if (revents & POLLIN)
+	{
+		char buffer[1024];
+		ssize_t bytes_read = read(this->socket_, buffer, sizeof(buffer) - 1);
+		if (bytes_read <= 0)
+		{
+			Log() << "Client disconnected or error occurred.";
+			Server::instance->events().DelEvent(this->socket_);
+			delete this;
+		}
+		else
+		{
+			buffer[bytes_read] = '\0';
+			Log() << "Received: " << buffer;
+			// Handle client message here
+		}
+	}
 }

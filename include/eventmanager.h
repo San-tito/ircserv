@@ -26,7 +26,17 @@ class EventManager
 	EventManager(void);
 	~EventManager(void);
 
-	void AddEvent(int fd, short events, Event *event);
+	template <typename EventType>
+	void AddEvent(int fd, short events)
+	{
+		struct pollfd p;
+		p.fd = fd;
+		p.events = events;
+		p.revents = 0;
+		pollfds_.push_back(p);
+		events_[fd] = new EventType(fd);
+	}
+
 	void DelEvent(int fd);
 	int Dispatch(void);
 

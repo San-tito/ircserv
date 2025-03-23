@@ -45,7 +45,7 @@ Listener::Listener(int port)
 		Log() << "Can't listen on [" << LISTEN_ADDRESS << "]:" << port << ": " << strerror(errno) << '!';
 		Server::instance->Exit(EXIT_FAILURE);
 	}
-	Server::instance->events()->AddEvent(this->fd_, POLLIN, new Event::Server);
+	Server::instance->events().AddEvent<Event::New>(this->fd_, POLLIN);
 	Log() << "Listening on [" << LISTEN_ADDRESS << "]:" << port << " ...";
 }
 
