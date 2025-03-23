@@ -44,5 +44,8 @@ Event::Client::~Client(void)
 
 void Event::Client::Callback(short revents)
 {
-	static_cast<void>(revents);
+	if (revents & POLLIN)
+		Server::instance->users().Read(this->socket_);
+	if (revents & POLLOUT)
+		Server::instance->users().Write(this->socket_);
 }

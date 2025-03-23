@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 02:59:45 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 13:03:45 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ time_t Server::startup_time(void) const
 EventManager &Server::events(void)
 {
 	return (this->events_);
+}
+
+UserManager &Server::users(void)
+{
+	return (this->users_);
 }
 
 void Server::SetSignals(void)

@@ -1,51 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   event.h                                            :+:      :+:    :+:   */
+/*   user.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:33:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 13:42:31 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 13:51:32 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EVENT_H
-# define EVENT_H
+#ifndef USER_H
+# define USER_H
 
-# include <poll.h>
+# include <ctime>
 # include <string>
 
-class Event
+class User
 {
   public:
-	virtual ~Event(void);
-	virtual void Callback(short revents) = 0;
+	User(int socket);
+	~User(void);
 
-	class New;
-	class Client;
-};
-
-class Event::New : public Event
-{
-  public:
-	New(int socket);
-	virtual ~New(void);
-	virtual void Callback(short revents);
+	void Read(void);
+	void Write(void);
 
   private:
 	int socket_;
+	bool registered_;
+	time_t last_activity_;
+	std::string rbuf_;
+	std::string wbuf_;
+	std::string nickname_;
+	std::string username_;
+	std::string password_;
 };
 
-class Event::Client : public Event
-{
-  public:
-	Client(int socket);
-	virtual ~Client(void);
-	virtual void Callback(short revents);
-
-  private:
-	int socket_;
-};
-
-#endif /* EVENT_H */
+#endif /* USER_H */

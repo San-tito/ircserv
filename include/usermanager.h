@@ -1,49 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   eventmanager.h                                     :+:      :+:    :+:   */
+/*   usermanager.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 13:41:00 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 13:50:06 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EVENTMANAGER_H
-# define EVENTMANAGER_H
+#ifndef USERMANAGER_H
+# define USERMANAGER_H
 
-# include "event.h"
 # include "typedefs.h"
-# include <cstdlib>
+# include "user.h"
 # include <map>
-# include <poll.h>
-# include <vector>
 
-class EventManager
+class UserManager
 {
   public:
-	EventManager(void);
-	~EventManager(void);
+	UserManager(void);
+	~UserManager(void);
 
-	template <typename EventType> void AddEvent(int fd, short events)
-	{
-		struct pollfd p;
-		p.fd = fd;
-		p.events = events;
-		p.revents = 0;
-		pollfds_.push_back(p);
-		events_[fd] = new EventType(fd);
-	}
-
-	void DelEvent(int fd);
-	void MaskEvent(int fd, short events);
-	void UnmaskEvent(int fd, short events);
-	int Dispatch(void);
+	void AddUser(int fd);
+	void DelUser(int fd);
+	void Read(int fd);
+	void Write(int fd);
 
   private:
-	std::map<int, Event *> events_;
-	std::vector<struct pollfd> pollfds_;
+	std::map<int, User *> users;
 };
 
-#endif /* EVENTMANAGER_H */
+#endif /* USERMANAGER_H */

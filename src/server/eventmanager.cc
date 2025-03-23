@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 02:42:50 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 13:42:51 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,30 @@ void EventManager::DelEvent(int fd)
 	}
 	delete (events_[fd]);
 	events_.erase(fd);
+}
+
+void EventManager::MaskEvent(int fd, short events)
+{
+	for (size_t index = 0; index < pollfds_.size(); index++)
+	{
+		if (pollfds_[index].fd == fd)
+		{
+			pollfds_[index].events |= events;
+			break ;
+		}
+	}
+}
+
+void EventManager::UnmaskEvent(int fd, short events)
+{
+	for (size_t index = 0; index < pollfds_.size(); index++)
+	{
+		if (pollfds_[index].fd == fd)
+		{
+			pollfds_[index].events &= ~events;
+			break ;
+		}
+	}
 }
 
 int EventManager::Dispatch(void)
