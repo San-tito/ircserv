@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 13:41:00 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 14:25:46 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class EventManager
 		p.revents = 0;
 		pollfds_.push_back(p);
 		events_[fd] = new EventType(fd);
-	}
+	};
 
 	void DelEvent(int fd);
 	void MaskEvent(int fd, short events);

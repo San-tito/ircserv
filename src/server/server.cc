@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 13:03:45 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 14:24:05 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,17 @@ void Server::Run(void)
 {
 	while (true)
 	{
+		users_.CheckTimeouts();
 		events_.Dispatch();
 	}
 }
 
 void Server::Exit(int status)
 {
-	Log() << "Server shutting down!";
+	Log() << "Server shutting down...";
 	instance = 0;
 	delete (this);
+	Log() << "Server shut down.";
 	exit(status);
 }
 
@@ -72,7 +74,7 @@ void Server::SetSignals(void)
 
 void Server::SignalHandler(int sig)
 {
-	Log() << "Got signal \"" << strsignal(sig) << "\" ...";
+	Log() << "Received signal: \"" << strsignal(sig) << '\"';
 	switch (sig)
 	{
 	case SIGINT:

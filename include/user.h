@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:33:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 13:51:32 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 14:12:33 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ class User
 
 	void Read(void);
 	void Write(void);
+	int socket(void) const;
+	time_t last_activity(void) const;
+	bool registered(void) const;
 
   private:
 	int socket_;

@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 13:50:06 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 14:16:09 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include "typedefs.h"
 # include "user.h"
 # include <map>
+
+# define TIMEOUT 20
 
 class UserManager
 {
@@ -27,6 +29,7 @@ class UserManager
 	void DelUser(int fd);
 	void Read(int fd);
 	void Write(int fd);
+	void CheckTimeouts(void);
 
   private:
 	std::map<int, User *> users;
