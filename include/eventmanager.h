@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 02:43:01 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 12:33:47 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ class EventManager
 	EventManager(void);
 	~EventManager(void);
 
-	template <typename EventType>
-	void AddEvent(int fd, short events)
+	template <typename EventType> void AddEvent(int fd, short events)
 	{
 		struct pollfd p;
 		p.fd = fd;

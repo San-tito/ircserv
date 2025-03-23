@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 02:52:41 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 12:43:52 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ class Listener
 	Listener(int port);
 	~Listener(void);
 
+	static bool InitSocket(int socket);
 	bool InitAddress(int port);
-	bool InitSocket(void);
 
   private:
-	int fd_;
+	int sock_;
 	struct sockaddr_in address_;
 };
 
