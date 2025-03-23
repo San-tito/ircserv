@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 21:26:52 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/22 21:36:32 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 01:07:29 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ class Log
 	Log(void);
 	template <typename T> Log &operator<<(T const &value)
 	{
-		buffer << value;
+		buffer_ << value;
 		return (*this);
 	}
 	virtual ~Log(void);
 
   private:
-	time_t startup_time;
-	std::ostringstream buffer;
+	time_t startup_time_;
+	std::ostringstream buffer_;
 };
 
 #endif /* LOGGING_HPP */

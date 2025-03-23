@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/22 23:01:07 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 01:07:11 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 Server *Server::instance(0);
 
-Server::Server(int port, std::string password) : password(password)
+Server::Server(int port, std::string password) : password_(password)
 {
 	instance = this;
-	this->startup_time = time(0);
+	this->startup_time_ = time(0);
 	SetSignals();
-	this->listener = new Listener(port);
+	this->listener_ = new Listener(port);
 }
 
 Server::~Server(void)
 {
-	delete (this->listener);
+	delete (this->listener_);
 }
 
 void Server::Run(void)
@@ -35,6 +35,7 @@ void Server::Run(void)
 
 void Server::Exit(int status)
 {
+	Log() << "Server shutting down!";
 	instance = 0;
 	delete (this);
 	exit(status);
@@ -53,11 +54,9 @@ void Server::SignalHandler(int sig)
 	switch (sig)
 	{
 	case SIGINT:
-		Server::instance->Exit(EXIT_SUCCESS);
-		break ;
 	case SIGTERM:
 	case SIGQUIT:
-		Server::instance->Exit(EXIT_FAILURE);
+		Server::instance->Exit(EXIT_SUCCESS);
 		break ;
 	}
 }
