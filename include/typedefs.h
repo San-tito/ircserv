@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:34:31 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/22 23:25:17 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/23 01:41:55 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,6 @@
 class	Server;
 class	Log;
 class	Listener;
+class	EventManager;
 
 #endif /* TYPEDEFS_H */

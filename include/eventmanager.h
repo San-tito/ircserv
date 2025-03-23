@@ -1,37 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   logging.h                                          :+:      :+:    :+:   */
+/*   eventmanager.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/22 21:26:52 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 01:42:12 by sguzman          ###   ########.fr       */
+/*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
+/*   Updated: 2025/03/23 01:53:40 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOGGING_HPP
-# define LOGGING_HPP
+#ifndef EVENTMANAGER_H
+# define EVENTMANAGER_H
 
-# include <ctime>
-# include <iostream>
-# include <sstream>
+# include <cstdlib>
+# include <poll.h>
+# include <vector>
 
-class Log
+class EventManager
 {
   public:
-	Log(void);
-	~Log(void);
+	EventManager(void);
+	~EventManager(void);
 
-	template <typename T> Log &operator<<(T const &value)
-	{
-		buffer_ << value;
-		return (*this);
-	}
+	int Dispatch(void);
 
   private:
-	time_t startup_time_;
-	std::ostringstream buffer_;
+	std::vector<struct pollfd> events_;
 };
 
-#endif /* LOGGING_HPP */
+#endif /* EVENTMANAGER_H */
