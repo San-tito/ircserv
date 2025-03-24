@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 17:27:33 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/24 21:09:51 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ class Command
 	Command(std::string name, int min, int max);
 	virtual ~Command(void);
 
-	bool isUserRegistered(User *user);
-	bool isParamsValid(User *user, int size);
+	bool UserRegistered(User *user);
+	bool ParamsValid(User *user, int size);
 
 	virtual void Execute(User *user,
 			const std::vector<std::string> &params) = 0;

@@ -6,13 +6,14 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 16:13:52 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/24 21:25:39 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BOT_H
 # define BOT_H
 
+# include "logging.h"
 # include <algorithm>
 # include <cfloat>
 # include <climits>
@@ -29,12 +30,20 @@
 class Bot
 {
   public:
-	Bot(void);
+	static Bot *instance;
+
+	Bot(std::string const &host, int port);
 	~Bot(void);
 
-	void Exit(int status);
+	void Run(void);
 
-	static Bot *instance;
+  private:
+	void Exit(int status);
+	void SetSignals(void);
+	static void SignalHandler(int sig);
+
+	std::string host_;
+	int port_;
 };
 
 #endif /* BOT_H */
