@@ -6,7 +6,7 @@
 #    By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/22 20:09:04 by sguzman           #+#    #+#              #
-#    Updated: 2025/03/23 16:05:41 by sguzman          ###   ########.fr        #
+#    Updated: 2025/03/24 21:03:02 by sguzman          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 ################################################################################
 
 NAME        = ircserv
-BNAME       = ircbot
+NAME_BOT    = ircbot
 CC          = c++
 CFLAGS      = -Wall -Wextra -Werror -std=c++98
 DFLAGS      = -MMD -MF $(@:.o=.d)
@@ -28,14 +28,12 @@ endif
 #                                 PROGRAM'S SRCS                               #
 ################################################################################
 
-SRCS_PATH    = ./src/server
-BSRCS_PATH   = ./src/bot
+SRCS_PATH    = ./src
 OBJS_PATH    = ./build
-BOBJS_PATH   = ./build/bot
 INCLUDE_PATH = ./include
 
-SRCS         = command.cc event.cc	logging.cc server.cc eventmanager.cc user.cc listener.cc	parser.cc usermanager.cc
-BSRCS        = bot.cc
+SRCS         = command.cc event.cc logging.cc server.cc eventmanager.cc user.cc listener.cc	parser.cc usermanager.cc
+BOT          = bot.cc
 MAIN         = main.cc
 
 ################################################################################
@@ -43,16 +41,12 @@ MAIN         = main.cc
 ################################################################################
 
 OBJS        = $(addprefix $(OBJS_PATH)/, ${SRCS:.cc=.o})
+OBJS_BOT	= $(addprefix $(OBJS_PATH)/, ${BOT:.cc=.o})
 OBJS_MAIN   = $(addprefix $(OBJS_PATH)/, ${MAIN:.cc=.o})
 
-BOBJS       = $(addprefix $(BOBJS_PATH)/, ${BSRCS:.cc=.o})
-BOBJS_MAIN  = $(addprefix $(BOBJS_PATH)/, ${MAIN:.cc=.o})
-
 DEPS        = $(addprefix $(OBJS_PATH)/, ${SRCS:.cc=.d})
+DEPS_BOT    = $(addprefix $(OBJS_PATH)/, ${BOT:.cc=.d})
 DEPS_MAIN   = $(addprefix $(OBJS_PATH)/, ${MAIN:.cc=.d})
-
-BDEPS       = $(addprefix $(BOBJS_PATH)/, ${BSRCS:.cc=.d})
-BDEPS_MAIN  = $(addprefix $(BOBJS_PATH)/, ${MAIN:.cc=.d})
 
 ################################################################################
 #                                 Makefile logic                               #
@@ -86,7 +80,7 @@ endef
 
 all: banner $(NAME)
 
-bot: banner $(BNAME)
+bonus: banner $(NAME_BOT)
 
 banner:
 	@printf "%b" "$(GREEN)\n"
@@ -106,14 +100,10 @@ banner:
 $(NAME): $(OBJS) $(OBJS_MAIN)
 	@$(call compile,$(CC) $(CFLAGS) $^ -o $@)
 
-$(BNAME): $(BOBJS) $(BOBJS_MAIN)
+$(NAME_BOT): $(OBJS_BOT)
 	@$(call compile,$(CC) $(CFLAGS) $^ -o $@)
 
 $(OBJS_PATH)/%.o: $(SRCS_PATH)/%.cc
-	@mkdir -p $(dir $@)
-	@$(call compile,$(CC) $(CFLAGS) $(DFLAGS) -c $< -o $@ -I $(INCLUDE_PATH))
-
-$(BOBJS_PATH)/%.o: $(BSRCS_PATH)/%.cc
 	@mkdir -p $(dir $@)
 	@$(call compile,$(CC) $(CFLAGS) $(DFLAGS) -c $< -o $@ -I $(INCLUDE_PATH))
 
@@ -123,9 +113,9 @@ clean: banner
 
 fclean: banner clean
 	@rm -rf $(NAME)
-	@rm -rf $(BNAME)
+	@rm -rf $(NAME_BOT)
 	@printf "%-53b%b" "$(CYAN)$(@):" "$(GREEN)[✓]$(RESET)\n"
 
 re: fclean all
 
-.PHONY: all banner clean fclean re 
+.PHONY: all bonus banner clean fclean re 
