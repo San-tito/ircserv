@@ -38,6 +38,17 @@ void UserManager::DelUser(int fd)
 	Server::instance->events().DelEvent(fd);
 }
 
+User *UserManager::Search(const std::string &name)
+{
+	std::map<int, User *>::iterator it(users.begin());
+	for (; it != users.end(); it++)
+	{
+		if ((it->second)->nickname() == name)
+			return (it->second);
+	}
+	return (0);
+}
+
 void UserManager::Read(void)
 {
 	std::map<int, User *>::iterator it(users.begin());

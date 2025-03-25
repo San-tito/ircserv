@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 17:00:06 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/25 15:44:16 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 CommandParser::CommandParser(void)
 {
-	commands_["INVITE"] = new Command::Invite;
+	commands_["INVITE"] = new Invite;
 	// commands_["JOIN"] = new Command::Join;
 	// commands_["KICK"] = new Command::Kick;
 	// commands_["MODE"] = new Command::Mode;

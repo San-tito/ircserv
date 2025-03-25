@@ -6,11 +6,12 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/24 21:10:16 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/25 15:47:58 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command.h"
+#include "server.h"
 
 Command::Command(std::string name, int min, int max) : name_(name), min_(min),
 	max_(max)
@@ -41,16 +42,20 @@ bool Command::ParamsValid(User *user, int size)
 	return (true);
 }
 
-Command::Invite::Invite(void) : Command("INVITE", 2, 2)
+Invite::Invite(void) : Command("INVITE", 2, 2)
 {
 }
 
-void Command::Invite::Execute(User *user,
-	const std::vector<std::string> &params)
+void Invite::Execute(User *user, const std::vector<std::string> &params)
 {
 	if (!UserRegistered(user))
 		return ;
 	if (!ParamsValid(user, params.size()))
 		return ;
-	// do stuff
+	User *target(Server::instance->users().Search(params[0]));
+	if (!target)
+	{
+		// client->Error();
+		return ;
+	}
 }

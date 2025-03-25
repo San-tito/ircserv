@@ -142,3 +142,8 @@ std::string User::wbuf(void) const
 {
 	return (this->wbuf_);
 }
+
+std::string User::nickname(void) const
+{
+	return (this->nickname_);
+}

@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/24 21:09:51 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/25 16:13:43 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,13 @@ class Command
 	virtual void Execute(User *user,
 			const std::vector<std::string> &params) = 0;
 
-	class Invite;
-
   private:
 	std::string name_;
 	int min_;
 	int max_;
 };
 
-class Command::Invite : public Command
+class Invite : public Command
 {
   public:
 	Invite(void);

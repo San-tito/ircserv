@@ -27,6 +27,7 @@ class UserManager
 
 	void AddUser(int fd);
 	void DelUser(int fd);
+	User *Search(const std::string &name);
 	void Read(void);
 	void Read(int fd);
 	void Write(void);

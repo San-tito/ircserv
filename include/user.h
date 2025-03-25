@@ -38,6 +38,7 @@ class User
 	time_t last_activity(void) const;
 	std::string rbuf(void) const;
 	std::string wbuf(void) const;
+	std::string nickname(void) const;
 
   private:
 	int socket_;
