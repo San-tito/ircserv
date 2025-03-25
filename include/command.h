@@ -43,4 +43,12 @@ class Invite : public Command
 	void Execute(User *user, const std::vector<std::string> &params);
 };
 
+class Join : public Command
+{
+  public:
+	Join(void);
+
+	void Execute(User *user, const std::vector<std::string> &params);
+};
+
 #endif /* COMMAND_H */

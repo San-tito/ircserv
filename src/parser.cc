@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.cc                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/25 15:44:16 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/25 19:04:06 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 CommandParser::CommandParser(void)
 {
 	commands_["INVITE"] = new Invite;
-	// commands_["JOIN"] = new Command::Join;
+	commands_["JOIN"] = new Join;
 	// commands_["KICK"] = new Command::Kick;
 	// commands_["MODE"] = new Command::Mode;
 	// commands_["NICK"] = new Command::Nick;
@@ -34,7 +34,7 @@ CommandParser::~CommandParser(void)
 		delete it->second;
 }
 
-void CommandParser::Trim(std::string &str)
+void	CommandParser::Trim(std::string &str)
 {
 	size_t start(str.find_first_not_of(" \t\r\n"));
 	size_t end(str.find_last_not_of(" \t\r\n"));
@@ -44,7 +44,7 @@ void CommandParser::Trim(std::string &str)
 		str = str.substr(start, end - start + 1);
 }
 
-bool CommandParser::ParseCommand(std::string &request, std::string &command)
+bool	CommandParser::ParseCommand(std::string &request, std::string &command)
 {
 	size_t	pos;
 
