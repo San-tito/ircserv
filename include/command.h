@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/25 16:13:43 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/25 21:34:35 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,9 @@ class Join : public Command
 	Join(void);
 
 	void Execute(User *user, const std::vector<std::string> &params);
+
+  private:
+	// bool IsAllowed(User *user, Channel chan, std::string key); -- TODO --
 };
 
 #endif /* COMMAND_H */

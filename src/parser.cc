@@ -34,7 +34,7 @@ CommandParser::~CommandParser(void)
 		delete it->second;
 }
 
-void	CommandParser::Trim(std::string &str)
+void CommandParser::Trim(std::string &str)
 {
 	size_t start(str.find_first_not_of(" \t\r\n"));
 	size_t end(str.find_last_not_of(" \t\r\n"));
@@ -44,7 +44,7 @@ void	CommandParser::Trim(std::string &str)
 		str = str.substr(start, end - start + 1);
 }
 
-bool	CommandParser::ParseCommand(std::string &request, std::string &command)
+bool CommandParser::ParseCommand(std::string &request, std::string &command)
 {
 	size_t	pos;
 
