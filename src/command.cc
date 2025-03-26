@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 00:02:42 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 00:32:51 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,8 @@ Join::Join(void) : Command("JOIN", 1, 2, true)
 
 void Join::Execute(Client *client, const std::vector<std::string> &params)
 {
-	static_cast<void>(client);
 	if (params.size() == 1 && params[0] == "0")
-	{
-		// Server::instance->channels().PartAll(client);
-		// return ;
-	}
+		return (Server::instance->channels().PartAll(client));
 	// bool				op(false);
 	std::string key;
 	std::string chan_name;
@@ -186,7 +182,7 @@ void Nick::Execute(Client *client, const std::vector<std::string> &params)
 				return (client->WritePrefix(ERR_ERRONEUSNICKNAME(client->nickname(),
 							params[0])));
 		}
-		if (!Server::instance->clients().Search(params[0]))
+		if (Server::instance->clients().Search(params[0]))
 			return (client->WritePrefix(ERR_NICKNAMEINUSE(client->nickname(),
 						params[0])));
 	}
@@ -198,7 +194,30 @@ void Nick::Execute(Client *client, const std::vector<std::string> &params)
 	}
 	else
 	{
-		client->Write("Nick: " + params[0]);
-		client->nickname() = params[0];
+		client->set_nickname(params[0]);
+		client->Write(client->mask(), name_ + " :" + params[0]);
 	}
+}
+
+User::User(void) : Command("USER", 0, -1, false)
+{
+}
+
+void User::Execute(Client *client, const std::vector<std::string> &params)
+{
+	if (client->registered())
+		return (client->WritePrefix(ERR_ALREADYREGISTRED(client->nickname())));
+	if (params.size() != 4)
+		return (client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(),
+					name_)));
+	if (!client->password().empty() || !client->nickname().empty())
+	{
+		if (params[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-@._") != std::string::npos)
+			return (Server::instance->clients().DelClient(client->socket()));
+		client->set_username(params[0]);
+		if (!client->nickname().empty())
+			return (client->Login());
+	}
+	else
+		client->WritePrefix(ERR_NOTREGISTERED(client->nickname()));
 }

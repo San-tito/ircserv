@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:53:37 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 00:20:00 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,10 @@ class Command
 	virtual void Execute(Client *client,
 			const std::vector<std::string> &params) = 0;
 
-  private:
+  protected:
 	std::string name_;
+
+  private:
 	int min_;
 	int max_;
 	bool register_req_;
@@ -70,13 +72,13 @@ class Nick : public Command
 
 	void Execute(Client *client, const std::vector<std::string> &params);
 };
-/*
+
 class User : public Command
 {
   public:
 	User(void);
 
 	void Execute(Client *client, const std::vector<std::string> &params);
-};*/
+};
 
 #endif /* COMMAND_H */
