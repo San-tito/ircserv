@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:33:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 11:52:57 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 12:16:01 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ class User
 	void Write(std::string const &msg);
 	void Write(std::string const &prefix, std::string const &msg);
 	void WritePrefix(std::string const &msg);
-	void WriteErrNeedMoreParams(std::string const &command);
-	void WriteErrNotRegistered(void);
 	void Request(void);
 	int socket(void) const;
 	bool registered(void) const;

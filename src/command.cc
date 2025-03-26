@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/25 21:54:04 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:17:35 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool Command::UserRegistered(User *user)
 {
 	if (!user->registered())
 	{
-		user->WriteErrNotRegistered();
+		user->WritePrefix(ERR_NOTREGISTERED(user->nickname()));
 		return (false);
 	}
 	return (true);
@@ -36,7 +36,7 @@ bool Command::ParamsValid(User *user, int size)
 {
 	if (size < min_ || (max_ != -1 && size > max_))
 	{
-		user->WriteErrNeedMoreParams(name_);
+		user->WritePrefix(ERR_NEEDMOREPARAMS(user->nickname(), name_));
 		return (false);
 	}
 	return (true);
