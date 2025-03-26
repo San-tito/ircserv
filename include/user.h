@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:33:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 17:26:34 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:27:55 by tuta             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ class User
 	std::string rbuf(void) const;
 	std::string wbuf(void) const;
 	std::string nickname(void) const;
+	std::string prefix(void) const;
 
   private:
 	int socket_;

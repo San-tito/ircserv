@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 17:26:14 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:29:12 by tuta             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,4 +146,9 @@ std::string User::wbuf(void) const
 std::string User::nickname(void) const
 {
 	return (this->nickname_);
+}
+
+std::string User::prefix(void) const
+{
+  return (this->nickname_ + "!" + this->username_ + "@unknown");
 }

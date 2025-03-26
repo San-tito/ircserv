@@ -6,7 +6,7 @@
 #    By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/22 20:09:04 by sguzman           #+#    #+#              #
-#    Updated: 2025/03/24 21:14:18 by sguzman          ###   ########.fr        #
+#    Updated: 2025/03/26 12:58:16 by tuta             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ SRCS_PATH    = ./src
 OBJS_PATH    = ./build
 INCLUDE_PATH = ./include
 
-SRCS         = command.cc event.cc logging.cc server.cc eventmanager.cc user.cc listener.cc	parser.cc usermanager.cc
+SRCS         = command.cc event.cc channel.cc channelManager.cc logging.cc server.cc eventmanager.cc user.cc listener.cc	parser.cc usermanager.cc
 BOT          = bot.cc logging.cc
 MAIN         = main.cc
 

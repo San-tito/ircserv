@@ -6,13 +6,14 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 16:14:38 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:17:38 by tuta             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_H
 # define SERVER_H
 
+# include "channelManager.h"
 # include "eventmanager.h"
 # include "listener.h"
 # include "logging.h"
@@ -33,30 +34,32 @@
 class Server
 {
   public:
-	static Server *instance;
+    static Server *instance;
 
-	Server(int port, std::string password);
-	~Server(void);
+    Server(int port, std::string password);
+    ~Server(void);
 
-	void Run(void);
-	void Exit(int status);
+    void Run(void);
+    void Exit(int status);
 
-	std::string password(void) const;
-	time_t startup_time(void) const;
-	UserManager &users(void);
-	EventManager &events(void);
-	CommandParser &parser(void);
+    std::string password(void) const;
+    time_t startup_time(void) const;
+    UserManager &users(void);
+    EventManager &events(void);
+    CommandParser &parser(void);
+    ChannelManager &channels(void);
 
   private:
-	void SetSignals(void);
-	static void SignalHandler(int sig);
+    void SetSignals(void);
+    static void SignalHandler(int sig);
 
-	time_t startup_time_;
-	std::string password_;
-	Listener *listener_;
-	UserManager users_;
-	EventManager events_;
-	CommandParser parser_;
+    time_t startup_time_;
+    std::string password_;
+    Listener *listener_;
+    UserManager users_;
+    EventManager events_;
+    CommandParser parser_;
+    ChannelManager channels_;
 };
 
 #endif /* SERVER_H */
