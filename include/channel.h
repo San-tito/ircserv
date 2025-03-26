@@ -1,6 +1,6 @@
 #ifndef CHANNEL_H
 # define CHANNEL_H
-# include "channelManager.h"
+# include "channelmanager.h"
 # include "typedefs.h"
 # include "user.h"
 # include <cstddef>
