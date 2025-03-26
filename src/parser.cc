@@ -6,11 +6,12 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 11:41:12 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 14:40:00 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#include "server.h"
 
 CommandParser::CommandParser(void)
 {
@@ -44,13 +45,13 @@ void CommandParser::Trim(std::string &str)
 		str = str.substr(start, end - start + 1);
 }
 
-bool CommandParser::ParseCommand(std::string &request, std::string &command)
+bool CommandParser::ParseCommand(std::string &request, std::string &prefix,
+	std::string &command)
 {
 	size_t	pos;
 
 	Trim(request);
 	pos = request.find(' ');
-	std::string prefix;
 	if (request[0] == ':')
 	{
 		if (pos == std::string::npos)
@@ -102,17 +103,27 @@ void CommandParser::ParseParams(std::string &request,
 
 void CommandParser::ProcessCommand(User *user, std::string &request)
 {
+	std::string prefix("");
 	std::string command("");
 	std::vector<std::string> params;
-	if (!ParseCommand(request, command))
+	if (!ParseCommand(request, prefix, command))
 	{
 		user->Write("ERROR :Prefix without command");
 		return ;
 	}
+	if (!prefix.empty() && user->registered())
+	{
+		if (Server::instance->users().Search(prefix))
+		{
+			user->Write("ERROR :Invalid prefix \"" + prefix + "\"");
+			return ;
+		}
+	}
 	ParseParams(request, params);
 	if (commands_.find(command) == commands_.end())
 	{
-		user->WritePrefix(ERR_UNKNOWNCOMMAND(user->nickname(), command));
+		if (user->registered())
+			user->WritePrefix(ERR_UNKNOWNCOMMAND(user->nickname(), command));
 		return ;
 	}
 	commands_[command]->Execute(user, params);
