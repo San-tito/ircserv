@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/25 19:14:15 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:23:04 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ UserManager::~UserManager(void)
 void UserManager::AddUser(int fd)
 {
 	users[fd] = new User(fd);
-	Server::instance->events().AddEvent<Event::Client>(fd, POLLIN);
+	Server::instance->events().AddClientSession(fd, POLLIN);
 }
 
 void UserManager::DelUser(int fd)

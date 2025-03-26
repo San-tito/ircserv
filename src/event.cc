@@ -10,15 +10,11 @@ Event::~Event(void)
 {
 }
 
-Event::New::New(int socket) : socket_(socket)
+NewConnection::NewConnection(int socket) : socket_(socket)
 {
 }
 
-Event::New::~New(void)
-{
-}
-
-void Event::New::Callback(short revents)
+void NewConnection::Callback(short revents)
 {
 	static_cast<void>(revents);
 	Log() << "Accepting new connection ...";
@@ -34,15 +30,11 @@ void Event::New::Callback(short revents)
 	Log() << "Connection " << new_socket << " accepted";
 }
 
-Event::Client::Client(int socket) : socket_(socket)
+ClientSession::ClientSession(int socket) : socket_(socket)
 {
 }
 
-Event::Client::~Client(void)
-{
-}
-
-void Event::Client::Callback(short revents)
+void ClientSession::Callback(short revents)
 {
 	if (revents & POLLIN)
 		Server::instance->users().Read(this->socket_);

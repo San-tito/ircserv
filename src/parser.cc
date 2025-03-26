@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/25 19:04:06 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:41:12 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void CommandParser::ProcessCommand(User *user, std::string &request)
 	ParseParams(request, params);
 	if (commands_.find(command) == commands_.end())
 	{
-		user->WriteErrUnknownCommand(command);
+		user->WritePrefix(ERR_UNKNOWNCOMMAND(user->nickname(), command));
 		return ;
 	}
 	commands_[command]->Execute(user, params);

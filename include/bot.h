@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/24 21:25:39 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:09:37 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ class Bot
 	void Run(void);
 
   private:
+	static void SignalHandler(int sig);
 	void Exit(int status);
 	void SetSignals(void);
-	static void SignalHandler(int sig);
 
 	std::string host_;
 	int port_;

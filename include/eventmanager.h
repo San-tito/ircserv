@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 14:25:46 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:23:30 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,8 @@ class EventManager
 	EventManager(void);
 	~EventManager(void);
 
-	template <typename EventType> void AddEvent(int fd, short events)
-	{
-		struct pollfd p;
-		p.fd = fd;
-		p.events = events;
-		p.revents = 0;
-		pollfds_.push_back(p);
-		events_[fd] = new EventType(fd);
-	};
-
+	void AddClientSession(int fd, short events);
+	void AddNewConnection(int fd, short events);
 	void DelEvent(int fd);
 	void MaskEvent(int fd, short events);
 	void UnmaskEvent(int fd, short events);

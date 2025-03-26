@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 13:42:51 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:23:56 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,28 @@ EventManager::~EventManager(void)
 	std::map<int, Event *>::iterator it(events_.begin());
 	for (; it != events_.end(); it++)
 		delete (it->second);
+}
+
+void EventManager::AddClientSession(int fd, short events)
+{
+	struct pollfd	p;
+
+	p.fd = fd;
+	p.events = events;
+	p.revents = 0;
+	pollfds_.push_back(p);
+	events_[fd] = new ClientSession(fd);
+}
+
+void EventManager::AddNewConnection(int fd, short events)
+{
+	struct pollfd	p;
+
+	p.fd = fd;
+	p.events = events;
+	p.revents = 0;
+	pollfds_.push_back(p);
+	events_[fd] = new NewConnection(fd);
 }
 
 void EventManager::DelEvent(int fd)

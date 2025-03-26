@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 17:26:14 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:53:10 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 User::User(int socket) : socket_(socket), registered_(false),
-	last_activity_(time(0))
+	last_activity_(time(0)), hostname_("unknown")
 {
 }
 
@@ -70,10 +70,14 @@ void User::Write(std::string const &msg)
 	wbuf_ += msg + '\n';
 }
 
-void User::WriteErrUnknownCommand(std::string const &command)
+void User::Write(std::string const &prefix, std::string const &msg)
 {
-	Write("421 " + (this->nickname_.empty() ? "*" : this->nickname_) + " "
-		+ command + " :Unknown command");
+	Write(":" + prefix + " " + msg);
+}
+
+void User::WritePrefix(std::string const &msg)
+{
+	Write(this->mask(), msg);
 }
 
 void User::WriteErrNeedMoreParams(std::string const &command)
@@ -146,4 +150,9 @@ std::string User::wbuf(void) const
 std::string User::nickname(void) const
 {
 	return (this->nickname_);
+}
+
+std::string User::mask(void) const
+{
+	return (this->nickname_ + "!" + this->username_ + "@" + this->hostname_);
 }

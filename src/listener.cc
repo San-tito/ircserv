@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:08:49 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 14:22:09 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:21:58 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ Listener::Listener(int port)
 		Log() << "Can't listen on [" << LISTEN_ADDRESS << "]:" << port << ": " << strerror(errno) << '!';
 		Server::instance->Exit(EXIT_FAILURE);
 	}
-	Server::instance->events().AddEvent<Event::New>(this->sock_, POLLIN);
+	Server::instance->events().AddNewConnection(this->sock_, POLLIN);
 	Log() << "Server listening on [" << LISTEN_ADDRESS << "]:" << port;
 }
 

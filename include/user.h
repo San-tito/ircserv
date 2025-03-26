@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:33:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 17:26:34 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 11:52:57 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ class User
 	void Read(void);
 	void Write(void);
 	void Write(std::string const &msg);
-	void WriteErrUnknownCommand(std::string const &command);
+	void Write(std::string const &prefix, std::string const &msg);
+	void WritePrefix(std::string const &msg);
 	void WriteErrNeedMoreParams(std::string const &command);
 	void WriteErrNotRegistered(void);
 	void Request(void);
@@ -39,6 +40,7 @@ class User
 	std::string rbuf(void) const;
 	std::string wbuf(void) const;
 	std::string nickname(void) const;
+	std::string mask(void) const;
 
   private:
 	int socket_;
@@ -49,6 +51,7 @@ class User
 	std::string nickname_;
 	std::string username_;
 	std::string password_;
+	std::string hostname_;
 };
 
 #endif /* USER_H */
