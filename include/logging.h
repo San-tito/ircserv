@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 21:26:52 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 16:14:17 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 23:48:37 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Log
 	{
 		buffer_ << value;
 		return (*this);
-	}
+	};
 
   private:
 	time_t startup_time_;

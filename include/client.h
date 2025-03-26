@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.h                                             :+:      :+:    :+:   */
+/*   client.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:33:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:06:45 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 23:47:23 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,18 @@ class Client
 	void WritePrefix(std::string const &msg);
 	void Request(void);
 	void Login(void);
-	
+
 	int socket(void) const;
 	time_t last_activity(void) const;
 	bool registered(void) const;
 	std::string rbuf(void) const;
 	std::string wbuf(void) const;
 	std::string nickname(void) const;
-	void	set_nickname(std::string nickname);
-	std::string clientname(void) const;
-	void	set_clientname(std::string Clientname);
+	void set_nickname(std::string nickname);
+	std::string username(void) const;
+	void set_username(std::string Clientname);
 	std::string password(void) const;
-	void	set_password(std::string pass);
+	void set_password(std::string pass);
 	std::string mask(void) const;
 
   private:
@@ -57,7 +57,7 @@ class Client
 	std::string rbuf_;
 	std::string wbuf_;
 	std::string nickname_;
-	std::string clientname_;
+	std::string username_;
 	std::string password_;
 	std::string hostname_;
 };

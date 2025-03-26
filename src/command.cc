@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:48:56 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 00:02:42 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,40 +161,42 @@ Pass::Pass(void) : Command("PASS", 1, 2, false)
 {
 }
 
-void	Pass::Execute(Client *client, const std::vector<std::string> &params)
+void Pass::Execute(Client *client, const std::vector<std::string> &params)
 {
 	if (client->password().empty())
 		client->set_password(params[0]);
 	else
-		client->WritePrefix(ERR_ALREADYREGISTRED(client->nickname())); 
+		client->WritePrefix(ERR_ALREADYREGISTRED(client->nickname()));
 }
 
 Nick::Nick(void) : Command("NICK", 1, 2, false)
 {
 }
 
-void	Nick::Execute(Client *client, const std::vector<std::string> &params)
+void Nick::Execute(Client *client, const std::vector<std::string> &params)
 {
 	if (client->nickname() != params[0])
 	{
 		if (!Server::instance->clients().IsValidNick(params[0]))
 		{
 			if (params[0].size() > MAX_NICK_LEN)
-				return client->WritePrefix(ERR_NICKNAMETOOLONG(client->nickname(),
-						params[0]));
+				return (client->WritePrefix(ERR_NICKNAMETOOLONG(client->nickname(),
+							params[0])));
 			else
-				return client->WritePrefix(ERR_ERRONEUSNICKNAME(client->nickname(),
-						params[0]));
+				return (client->WritePrefix(ERR_ERRONEUSNICKNAME(client->nickname(),
+							params[0])));
 		}
 		if (!Server::instance->clients().Search(params[0]))
-			return client->WritePrefix(ERR_NICKNAMEINUSE(client->nickname(), params[0]));
+			return (client->WritePrefix(ERR_NICKNAMEINUSE(client->nickname(),
+						params[0])));
 	}
 	if (!client->registered())
 	{
 		client->set_nickname(params[0]);
-		if (!client->clientname().empty())
+		if (!client->username().empty())
 			return (client->Login());
-	} else
+	}
+	else
 	{
 		client->Write("Nick: " + params[0]);
 		client->nickname() = params[0];

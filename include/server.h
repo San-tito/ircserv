@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:30:26 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 23:49:03 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ class Server
 	EventManager &events(void);
 	CommandParser &parser(void);
 	ChannelManager &channels(void);
-
-	time_t startup_time(void);
 
   private:
 	void SetSignals(void);

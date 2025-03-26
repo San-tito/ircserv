@@ -14,16 +14,16 @@ class ChannelManager
 	ChannelManager(void);
 	~ChannelManager(void);
 
-	Channel *FindChannel(const std::string &name);
+	Channel *Search(const std::string &name);
 	bool AddChannel(Channel *channel);
 	bool IsValidName(const std::string &name);
 	void RemoveChannel(const std::string &name);
-	void ExecuteMode(Client *client, std::vector<std::string> &params);
-	void ExecuteJoin(Client *client, const std::string &name);
-	void ExecutePart(Client *client, const std::string &channelName,
+	void Mode(Client *client, std::vector<std::string> &params);
+	void Join(Client *client, const std::string &name);
+	void Part(Client *client, const std::string &channelName,
 		const std::string &reason);
-	void ExecutePartAll(Client *client);
-	void ExecuteKick(Client *client, const std::string &nick,
+	void PartAll(Client *client);
+	void Kick(Client *client, const std::string &nick,
 		const std::string &channelName, const std::string &reason);
 
   private:

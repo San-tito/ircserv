@@ -6,13 +6,13 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:39:56 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 00:02:27 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "client.h"
 #include "logging.h"
 #include "server.h"
-#include "client.h"
 
 Client::Client(int socket) : socket_(socket), registered_(false),
 	last_activity_(time(0)), hostname_("unknown")
@@ -109,15 +109,15 @@ void Client::Request(void)
 
 void Client::Login(void)
 {
-	if (!Server::instance->password().empty() && password_ != Server::instance->password())
-		return Server::instance->clients().DelClient(socket());
+	if (!Server::instance->password().empty()
+		&& password_ != Server::instance->password())
+		return (Server::instance->clients().DelClient(socket()));
 	registered_ = true;
-	WritePrefix(RPL_WELCOME(nickname_, clientname_));
+	WritePrefix(RPL_WELCOME(nickname_, username_));
 	WritePrefix(RPL_YOURHOST(nickname_, "*", "irc-0.0.1"));
 	// WritePrefix(RPL_CREATED(nickname(), Server::instance->startup_time()));
 	WritePrefix(RPL_MYINFO(nickname_, "*", "irc-0.0.1"));
 }
-
 
 int Client::socket(void) const
 {
@@ -144,14 +144,14 @@ std::string Client::wbuf(void) const
 	return (this->wbuf_);
 }
 
-std::string Client::clientname(void) const
+std::string Client::username(void) const
 {
-	return (this->nickname_);
+	return (this->username_);
 }
 
-void	Client::set_clientname(std::string clientname)
+void Client::set_username(std::string username)
 {
-	this->clientname_ = clientname;
+	this->username_ = username;
 }
 
 std::string Client::nickname(void) const
@@ -159,7 +159,7 @@ std::string Client::nickname(void) const
 	return (this->nickname_);
 }
 
-void	Client::set_nickname(std::string nickname)
+void Client::set_nickname(std::string nickname)
 {
 	this->nickname_ = nickname;
 }
@@ -176,5 +176,5 @@ void Client::set_password(std::string pass)
 
 std::string Client::mask(void) const
 {
-	return (this->nickname_ + "!" + this->clientname_ + "@" + this->hostname_);
+	return (this->nickname_ + "!" + this->username_ + "@" + this->hostname_);
 }

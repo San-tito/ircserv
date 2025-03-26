@@ -1,58 +1,27 @@
 #include "channel.h"
 #include <algorithm>
 
-Channel::Channel(const std::string &name) : name_(name), max_clients_(0),
-	clients_(), invites_(), operators_()
+Channel::Channel(const std::string &name) : name_(name), max_members_(0)
 {
 }
 
-Channel::~Channel()
+Channel::~Channel(void)
 {
 }
 
-std::string Channel::name() const
+std::string Channel::name(void) const
 {
 	return (name_);
 }
 
-std::set<char> Channel::modes() const
-{
-	return (modes_);
-}
-
-std::string Channel::topic() const
+std::string Channel::topic(void) const
 {
 	return (topic_);
 }
 
-std::string Channel::key() const
+std::string Channel::key(void) const
 {
 	return (key_);
-}
-
-size_t Channel::maxClients() const
-{
-	return (max_clients_);
-}
-
-std::map<std::string, Client *> Channel::clients() const
-{
-	return (clients_);
-}
-
-void Channel::maxClients(size_t max_clients)
-{
-	max_clients_ = max_clients;
-}
-
-void Channel::topic(const std::string &topic)
-{
-	topic_ = topic;
-}
-
-void Channel::key(const std::string &key)
-{
-	key_ = key;
 }
 
 void Channel::AddMode(char mode)
@@ -75,23 +44,23 @@ void Channel::AddInvite(Client *client)
 	invites_[client->nickname()] = client;
 }
 
-bool Channel::isInvited(Client *client) const
+bool Channel::IsInvited(Client *client) const
 {
 	return (invites_.find(client->nickname()) != invites_.end());
 }
 
-void Channel::AddClient(Client *client)
+void Channel::AddMember(Client *client)
 {
-	clients_[client->nickname()] = client;
+	members_[client->nickname()] = client;
 }
 
-void Channel::RemoveClient(Client *client)
+void Channel::RemoveMember(Client *client)
 {
-	clients_.erase(client->nickname());
+	members_.erase(client->nickname());
 	operators_.erase(client->nickname());
 }
 
-bool Channel::isOperator(Client *client) const
+bool Channel::IsOperator(Client *client) const
 {
 	return (operators_.find(client->nickname()) != operators_.end());
 }
@@ -108,20 +77,20 @@ void Channel::RemoveOperator(Client *client)
 
 void Channel::Write(Client *sender, const std::string &message)
 {
-	for (std::map<std::string,
-		Client *>::iterator it = clients_.begin(); it != clients_.end(); ++it)
+	std::map<std::string, Client *>::iterator it = members_.begin();
+	for (; it != members_.end(); ++it)
 	{
 		if (it->second != sender)
 			it->second->Write(sender->mask(), message);
 	}
 }
 
-Client	*Channel::SearchClient(const std::string &name)
+Client *Channel::IsMember(const std::string &name)
 {
-	std::map<std::string, Client *>::iterator it = clients_.find(name);
-	if (it != clients_.end())
+	std::map<std::string, Client *>::iterator it = members_.find(name);
+	if (it != members_.end())
 		return (it->second);
-	return (NULL);
+	return (0);
 }
 
 void Channel::Mode(Client *client, std::vector<std::string> &params)
@@ -151,15 +120,16 @@ void Channel::Mode(Client *client, std::vector<std::string> &params)
 
 void Channel::Join(Client *client)
 {
-	AddClient(client);
+	AddMember(client);
 }
 
 void Channel::Part(Client *client, const std::string &reason)
 {
-	std::map<std::string, Client *>::iterator it = clients_.find(client->nickname());
-	if (it != clients_.end())
+	std::map<std::string,
+		Client *>::iterator it = members_.find(client->nickname());
+	if (it != members_.end())
 	{
-		clients_.erase(it);
+		members_.erase(it);
 		client->Write("PART " + name() + " :" + reason);
 		Write(client, "PART " + name() + " :" + reason);
 	}
@@ -168,10 +138,10 @@ void Channel::Part(Client *client, const std::string &reason)
 void Channel::Kick(Client *client, Client *target, const std::string &reason)
 {
 	std::map<std::string,
-		Client *>::iterator it = clients_.find(target->nickname());
-	if (it != clients_.end())
+		Client *>::iterator it = members_.find(target->nickname());
+	if (it != members_.end())
 	{
-		clients_.erase(it);
+		members_.erase(it);
 		Write(client, "KICK " + name() + " " + target->nickname() + " :"
 			+ reason);
 		target->Write("KICK " + name() + " :" + reason);
