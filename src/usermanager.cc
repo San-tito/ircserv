@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 11:23:04 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 17:54:40 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,13 @@ void UserManager::CheckTimeouts(void)
 			DelUser(user->socket());
 		}
 	}
+}
+
+bool UserManager::IsValidNick(std::string nick)
+{
+	if (nick.size() > MAX_NICK_LEN)
+		return (false);
+	if (nick.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
+		return (false);
+	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 14:40:00 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 17:27:22 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ CommandParser::CommandParser(void)
 	commands_["JOIN"] = new Join;
 	// commands_["KICK"] = new Command::Kick;
 	// commands_["MODE"] = new Command::Mode;
-	// commands_["NICK"] = new Command::Nick;
+	commands_["NICK"] = new Nick;
 	// commands_["PART"] = new Command::Part;
-	// commands_["PASS"] = new Command::Pass;
+	commands_["PASS"] = new Pass;
 	// commands_["PRIVMSG"] = new Command::Privmsg;
 	// commands_["QUIT"] = new Command::Quit;
 	// commands_["TOPIC"] = new Command::Topic;
@@ -126,5 +126,9 @@ void CommandParser::ProcessCommand(User *user, std::string &request)
 			user->WritePrefix(ERR_UNKNOWNCOMMAND(user->nickname(), command));
 		return ;
 	}
+	if (!commands_[command]->UserRegistered(user))
+		return ;
+	if (!commands_[command]->ParamsValid(user, params.size()))
+		return ;
 	commands_[command]->Execute(user, params);
 }

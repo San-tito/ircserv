@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   messages.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:41:46 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 12:15:48 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 18:01:40 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # define ERR_NOTEXTTOSEND(command) "412 " + (command) + " :No text to send"
 # define ERR_UNKNOWNCOMMAND(command, target) "421 " + (command) + " " + (target) + " :Unknown command"
 # define ERR_ERRONEUSNICKNAME(nick, target) "432 " + (nick) + " " + (target) + " :Erroneous nickname"
-# define ERR_NICKNAMETOOLONG(nick, max_len) "432 " + (nick) + " " + (nick) + " :Nickname too long, max. " + std::to_string(max_len) + " characters"
+# define ERR_NICKNAMETOOLONG(user, nick) "432 " + (user) + " " + (nick) + " :Nickname too long"
 # define ERR_NICKNAMEINUSE(nick, target) "433 " + (nick) + " " + (target) + " :Nickname already in use"
 # define ERR_NOTONCHANNEL(channel, nick) "442 " + (channel) + " " + (nick) + " :You are not on that channel"
 # define ERR_USERNOTINCHANNEL(channel, nick, target) "441 " + (channel) + " " + (nick) + " " + (target) + " :They aren't on that channel"

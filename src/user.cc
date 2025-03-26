@@ -3,19 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   user.cc                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 15:15:56 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 17:32:24 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "logging.h"
 #include "server.h"
 #include "user.h"
-#include <cerrno>
-#include <cstring>
-#include <unistd.h>
 
 User::User(int socket) : socket_(socket), registered_(false),
 	last_activity_(time(0)), hostname_("unknown")
@@ -138,6 +135,16 @@ std::string User::wbuf(void) const
 std::string User::nickname(void) const
 {
 	return (this->nickname_);
+}
+
+std::string User::password(void) const
+{
+	return (this->password_);
+}
+
+void User::set_password(std::string pass)
+{
+	this->password_ = pass;
 }
 
 std::string User::mask(void) const

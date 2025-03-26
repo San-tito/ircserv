@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.cc                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 15:16:26 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:50:07 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,11 @@ CommandParser &Server::parser(void)
 	return (this->parser_);
 }
 
+ChannelManager &Server::channels(void)
+{
+	return (this->channels_);
+}
+
 void Server::SetSignals(void)
 {
 	signal(SIGINT, Server::SignalHandler);
@@ -90,7 +95,7 @@ void Server::SetSignals(void)
 
 void Server::SignalHandler(int sig)
 {
-	Log() << "Received signal: \"" << strsignal(sig) << '\"';
+	Log() << "Received signal: \"" << strsignal(sig) << '"';
 	switch (sig)
 	{
 	case SIGINT:

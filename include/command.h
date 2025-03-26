@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 11:13:54 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 17:27:41 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 class Command
 {
   public:
-	Command(std::string name, int min, int max);
+	Command(std::string name, int min, int max, bool register_req);
 	virtual ~Command(void);
 
 	bool UserRegistered(User *user);
@@ -33,6 +33,7 @@ class Command
 	std::string name_;
 	int min_;
 	int max_;
+	bool register_req_;
 };
 
 class Invite : public Command
@@ -52,6 +53,22 @@ class Join : public Command
 
   private:
 	// bool IsAllowed(User *user, Channel chan, std::string key); -- TODO --
+};
+
+class Pass : public Command
+{
+  public:
+	Pass(void);
+
+	void Execute(User *user, const std::vector<std::string> &params);
+};
+
+class Nick : public Command
+{
+  public:
+	Nick(void);
+
+	void Execute(User *user, const std::vector<std::string> &params);
 };
 
 #endif /* COMMAND_H */

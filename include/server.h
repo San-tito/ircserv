@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   server.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 15:16:47 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 16:49:23 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_H
 # define SERVER_H
 
+# include "channelmanager.h"
 # include "eventmanager.h"
 # include "listener.h"
 # include "logging.h"
@@ -50,6 +51,7 @@ class Server
 	UserManager &users(void);
 	EventManager &events(void);
 	CommandParser &parser(void);
+	ChannelManager &channels(void);
 
   private:
 	void SetSignals(void);
@@ -62,6 +64,7 @@ class Server
 	UserManager users_;
 	EventManager events_;
 	CommandParser parser_;
+	ChannelManager channels_;
 };
 
 #endif /* SERVER_H */
