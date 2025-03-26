@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 15:36:26 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 15:16:26 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,10 @@ Server *Server::instance(0);
 Server::Server(int port, std::string password) : password_(password)
 {
 	instance = this;
+	struct hostent *h(0);
+	h = gethostbyname(LISTEN_ADDRESS);
+	if (h)
+		this->servername_ = h->h_name;
 	this->startup_time_ = time(0);
 	this->listener_ = new Listener(port);
 	SetSignals();
@@ -55,6 +59,11 @@ std::string Server::password(void) const
 time_t Server::startup_time(void) const
 {
 	return (this->startup_time_);
+}
+
+std::string Server::servername(void) const
+{
+	return (this->servername_);
 }
 
 EventManager &Server::events(void)

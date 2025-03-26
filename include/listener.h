@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 12:43:52 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 15:14:37 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 # include <netinet/in.h>
 # include <sys/socket.h>
 # include <unistd.h>
-
-# define LISTEN_ADDRESS "0.0.0.0"
 
 class Listener
 {

@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 12:16:11 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 15:15:56 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void User::Write(std::string const &prefix, std::string const &msg)
 
 void User::WritePrefix(std::string const &msg)
 {
-	Write(this->mask(), msg);
+	Write(Server::instance->servername(), msg);
 }
 
 void User::Request(void)
