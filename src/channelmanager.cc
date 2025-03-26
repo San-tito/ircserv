@@ -50,7 +50,7 @@ void ChannelManager::RemoveChannel(const std::string &name)
 	}
 }
 
-void ChannelManager::ExecuteMode(User *user, std::vector<std::string> &params)
+void ChannelManager::ExecuteMode(Client *client, std::vector<std::string> &params)
 // falta implementar muchas cosas
 {
 	Channel *channel;
@@ -58,25 +58,25 @@ void ChannelManager::ExecuteMode(User *user, std::vector<std::string> &params)
 	channel = FindChannel(params[0]);
 	if (!channel)
 	{
-		// user->WriteErr(ERR_NOSUCHCHANNEL(user->getNick(), params[0]));
+		// client->WriteErr(ERR_NOSUCHCHANNEL(client->getNick(), params[0]));
 		return ;
 	}
-	channel->Mode(user, params);
+	channel->Mode(client, params);
 }
 
-void ChannelManager::ExecuteJoin(User *user, const std::string &name)
+void ChannelManager::ExecuteJoin(Client *client, const std::string &name)
 {
 	Channel	*channel;
 
 	if (!IsValidName(name))
 	{
-		// user->WriteErr(ERR_NOSUCHCHANNEL(user->getNick(), name));
+		// client->WriteErr(ERR_NOSUCHCHANNEL(client->getNick(), name));
 		return ;
 	}
 	channel = FindChannel(name);
 	if (channel)
 	{
-		if (channel->SearchUser(user->nickname()))
+		if (channel->SearchClient(client->nickname()))
 			return ;
 	}
 	else
@@ -84,10 +84,10 @@ void ChannelManager::ExecuteJoin(User *user, const std::string &name)
 		channel = new Channel(name);
 		AddChannel(channel);
 	}
-	channel->Join(user);
+	channel->Join(client);
 }
 
-void ChannelManager::ExecutePart(User *user, const std::string &channelName,
+void ChannelManager::ExecutePart(Client *client, const std::string &channelName,
 	const std::string &reason)
 {
 	Channel	*channel;
@@ -95,55 +95,55 @@ void ChannelManager::ExecutePart(User *user, const std::string &channelName,
 	channel = FindChannel(channelName);
 	if (!channel)
 	{
-		// user->WriteErr(ERR_NOSUCHCHANNEL(user->getNick(), channelName));
+		// client->WriteErr(ERR_NOSUCHCHANNEL(client->getNick(), channelName));
 		return ;
 	}
-	channel->Part(user, reason);
+	channel->Part(client, reason);
 }
 
-void ChannelManager::ExecutePartAll(User *user)
+void ChannelManager::ExecutePartAll(Client *client)
 {
 	for (std::map<std::string,
 		Channel *>::iterator it = channels_.begin(); it != channels_.end(); ++it)
 	{
-		if (it->second->SearchUser(user->nickname()))
-			it->second->Part(user, "");
+		if (it->second->SearchClient(client->nickname()))
+			it->second->Part(client, "");
 	}
 }
 
-void ChannelManager::ExecuteKick(User *user, const std::string &nick,
+void ChannelManager::ExecuteKick(Client *client, const std::string &nick,
 	const std::string &channelName, const std::string &reason)
 {
 	Channel	*channel;
 
 	channel = FindChannel(channelName);
-	User *target(Server::instance->users().Search(nick));
+	Client *target(Server::instance->clients().Search(nick));
 	if (!target)
 	{
 		return ;
-		// return (user->WriteErr(ERR_NOSUCHNICK(user->nickname(), nick));
+		// return (client->WriteErr(ERR_NOSUCHNICK(client->nickname(), nick));
 	}
 	if (!channel)
 	{
-		// user->WriteErr(ERR_NOSUCHCHANNEL(user->nickname(), channelName));
+		// client->WriteErr(ERR_NOSUCHCHANNEL(client->nickname(), channelName));
 		return ;
 	}
-	if (!channel->SearchUser(user->nickname()))
+	if (!channel->SearchClient(client->nickname()))
 	{
 		return ;
-		// return (user->WriteErr(ERR_NOTONCHANNEL(user->nickname(), channel)));
+		// return (client->WriteErr(ERR_NOTONCHANNEL(client->nickname(), channel)));
 	}
-	if (!channel->SearchUser(nick))
+	if (!channel->SearchClient(nick))
 	{
 		return ;
-		// return (user->WriteErr(ERR_USERNOTINCHANNEL(user->nickname(),
+		// return (client->WriteErr(ERR_CLIENTNOTINCHANNEL(client->nickname(),
 		//		target->getNick(), channel)));
 	}
-	if (!channel->isOperator(user))
+	if (!channel->isOperator(client))
 	{
 		return ;
-		// return (user->WriteErr(ERR_CHANOPPRIVTOOLOW(user->nickname(),
+		// return (client->WriteErr(ERR_CHANOPPRIVTOOLOW(client->nickname(),
 		//			channel)));
 	}
-	channel->Kick(user, target, reason);
+	channel->Kick(client, target, reason);
 }

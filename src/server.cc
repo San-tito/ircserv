@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 16:50:07 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 21:51:16 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ void Server::Run(void)
 {
 	while (true)
 	{
-		users_.CheckTimeouts();
-		users_.Read();
-		users_.Write();
+		clients_.CheckTimeouts();
+		clients_.Read();
+		clients_.Write();
 		events_.Dispatch();
 	}
 }
@@ -71,9 +71,9 @@ EventManager &Server::events(void)
 	return (this->events_);
 }
 
-UserManager &Server::users(void)
+ClientManager &Server::clients(void)
 {
-	return (this->users_);
+	return (this->clients_);
 }
 
 CommandParser &Server::parser(void)

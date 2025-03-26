@@ -2,7 +2,7 @@
 # define CHANNEL_H
 # include "channelmanager.h"
 # include "typedefs.h"
-# include "user.h"
+# include "client.h"
 # include <cstddef>
 # include <map>
 # include <set>
@@ -18,37 +18,37 @@ class Channel
 	std::set<char> modes() const;
 	std::string topic() const;
 	std::string key() const;
-	std::map<std::string, User *> users() const;
-	size_t maxUsers() const;
-	bool isInvited(User *user) const;
-	bool isOperator(User *user) const;
-	void maxUsers(size_t max_users);
+	std::map<std::string, Client *> clients() const;
+	size_t maxClients() const;
+	bool isInvited(Client *client) const;
+	bool isOperator(Client *client) const;
+	void maxClients(size_t max_clients);
 	void topic(const std::string &topic);
 	void key(const std::string &key);
 	void AddMode(char mode);
 	bool HasMode(char mode) const;
 	void DelMode(char mode);
-	void AddInvite(User *user);
-	void AddUser(User *user);
-	void RemoveUser(User *user);
-	void AddOperator(User *user);
-	void RemoveOperator(User *user);
-	void Write(User *sender, const std::string &message);
-	User *SearchUser(const std::string &name);
+	void AddInvite(Client *client);
+	void AddClient(Client *client);
+	void RemoveClient(Client *client);
+	void AddOperator(Client *client);
+	void RemoveOperator(Client *client);
+	void Write(Client *sender, const std::string &message);
+	Client *SearchClient(const std::string &name);
 
-	void Join(User *user);
-	void Part(User *user, const std::string &reason);
-	void Kick(User *user, User *target, const std::string &reason);
-	void Mode(User *user, std::vector<std::string> &params);
+	void Join(Client *client);
+	void Part(Client *client, const std::string &reason);
+	void Kick(Client *client, Client *target, const std::string &reason);
+	void Mode(Client *client, std::vector<std::string> &params);
 
   private:
 	std::string name_;
 	std::set<char> modes_;
 	std::string topic_;
 	std::string key_;
-	size_t max_users_;
-	std::map<std::string, User *> users_;
-	std::map<std::string, User *> invites_;
-	std::map<std::string, User *> operators_;
+	size_t max_clients_;
+	std::map<std::string, Client *> clients_;
+	std::map<std::string, Client *> invites_;
+	std::map<std::string, Client *> operators_;
 };
 #endif /* CHANNEL_H */

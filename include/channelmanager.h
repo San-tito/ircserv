@@ -18,12 +18,12 @@ class ChannelManager
 	bool AddChannel(Channel *channel);
 	bool IsValidName(const std::string &name);
 	void RemoveChannel(const std::string &name);
-	void ExecuteMode(User *user, std::vector<std::string> &params);
-	void ExecuteJoin(User *user, const std::string &name);
-	void ExecutePart(User *user, const std::string &channelName,
+	void ExecuteMode(Client *client, std::vector<std::string> &params);
+	void ExecuteJoin(Client *client, const std::string &name);
+	void ExecutePart(Client *client, const std::string &channelName,
 		const std::string &reason);
-	void ExecutePartAll(User *user);
-	void ExecuteKick(User *user, const std::string &nick,
+	void ExecutePartAll(Client *client);
+	void ExecuteKick(Client *client, const std::string &nick,
 		const std::string &channelName, const std::string &reason);
 
   private:

@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 17:27:22 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 22:02:26 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ CommandParser::CommandParser(void)
 	// commands_["PRIVMSG"] = new Command::Privmsg;
 	// commands_["QUIT"] = new Command::Quit;
 	// commands_["TOPIC"] = new Command::Topic;
-	// commands_["USER"] = new Command::User;
+	// commands_["USER"] = new User;
 }
 
 CommandParser::~CommandParser(void)
@@ -101,34 +101,34 @@ void CommandParser::ParseParams(std::string &request,
 	}
 }
 
-void CommandParser::ProcessCommand(User *user, std::string &request)
+void CommandParser::ProcessCommand(Client *client, std::string &request)
 {
 	std::string prefix("");
 	std::string command("");
 	std::vector<std::string> params;
 	if (!ParseCommand(request, prefix, command))
 	{
-		user->Write("ERROR :Prefix without command");
+		client->Write("ERROR :Prefix without command");
 		return ;
 	}
-	if (!prefix.empty() && user->registered())
+	if (!prefix.empty() && client->registered())
 	{
-		if (Server::instance->users().Search(prefix))
+		if (Server::instance->clients().Search(prefix))
 		{
-			user->Write("ERROR :Invalid prefix \"" + prefix + "\"");
+			client->Write("ERROR :Invalid prefix \"" + prefix + "\"");
 			return ;
 		}
 	}
 	ParseParams(request, params);
 	if (commands_.find(command) == commands_.end())
 	{
-		if (user->registered())
-			user->WritePrefix(ERR_UNKNOWNCOMMAND(user->nickname(), command));
+		if (client->registered())
+			client->WritePrefix(ERR_UNKNOWNCOMMAND(client->nickname(), command));
 		return ;
 	}
-	if (!commands_[command]->UserRegistered(user))
+	if (!commands_[command]->ClientRegistered(client))
 		return ;
-	if (!commands_[command]->ParamsValid(user, params.size()))
+	if (!commands_[command]->ParamsValid(client, params.size()))
 		return ;
-	commands_[command]->Execute(user, params);
+	commands_[command]->Execute(client, params);
 }

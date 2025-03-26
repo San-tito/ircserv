@@ -26,7 +26,7 @@ void NewConnection::Callback(short revents)
 	}
 	if (!Listener::InitSocket(new_socket))
 		return ;
-	Server::instance->users().AddUser(new_socket);
+	Server::instance->clients().AddClient(new_socket);
 	Log() << "Connection " << new_socket << " accepted";
 }
 
@@ -37,7 +37,7 @@ ClientSession::ClientSession(int socket) : socket_(socket)
 void ClientSession::Callback(short revents)
 {
 	if (revents & POLLIN)
-		Server::instance->users().Read(this->socket_);
+		Server::instance->clients().Read(this->socket_);
 	if (revents & POLLOUT)
-		Server::instance->users().Write(this->socket_);
+		Server::instance->clients().Write(this->socket_);
 }

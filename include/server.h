@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 16:49:23 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 21:30:26 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include "logging.h"
 # include "parser.h"
 # include "typedefs.h"
-# include "usermanager.h"
+# include "clientmanager.h"
 # include <algorithm>
 # include <cfloat>
 # include <climits>
@@ -48,10 +48,12 @@ class Server
 	time_t startup_time(void) const;
 	std::string password(void) const;
 	std::string servername(void) const;
-	UserManager &users(void);
+	ClientManager &clients(void);
 	EventManager &events(void);
 	CommandParser &parser(void);
 	ChannelManager &channels(void);
+
+	time_t startup_time(void);
 
   private:
 	void SetSignals(void);
@@ -61,7 +63,7 @@ class Server
 	std::string password_;
 	std::string servername_;
 	Listener *listener_;
-	UserManager users_;
+	ClientManager clients_;
 	EventManager events_;
 	CommandParser parser_;
 	ChannelManager channels_;

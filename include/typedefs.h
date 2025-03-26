@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   typedefs.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:34:31 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/23 16:14:54 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/26 21:30:38 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 class	Server;
 class	Listener;
-class	User;
+class	Client;
 class	Command;
 
 #endif /* TYPEDEFS_H */

@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   user.cc                                            :+:      :+:    :+:   */
+/*   client.cc                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 17:32:24 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/26 21:39:56 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "logging.h"
 #include "server.h"
-#include "user.h"
+#include "client.h"
 
-User::User(int socket) : socket_(socket), registered_(false),
+Client::Client(int socket) : socket_(socket), registered_(false),
 	last_activity_(time(0)), hostname_("unknown")
 {
 }
 
-User::~User(void)
+Client::~Client(void)
 {
 	close(this->socket_);
 }
 
-void User::Read(void)
+void Client::Read(void)
 {
 	ssize_t	len;
 	char	buf[READBUFFER_LEN];
@@ -32,21 +32,21 @@ void User::Read(void)
 	len = read(this->socket_, buf, READBUFFER_LEN);
 	if (len == 0)
 	{
-		Server::instance->users().DelUser(this->socket_);
+		Server::instance->clients().DelClient(this->socket_);
 		return ;
 	}
 	if (len < 0)
 	{
 		if (errno == EAGAIN)
 			return ;
-		Server::instance->users().DelUser(this->socket_);
+		Server::instance->clients().DelClient(this->socket_);
 		return ;
 	}
 	buf[len] = '\0';
 	rbuf_ += buf;
 }
 
-void User::Write(void)
+void Client::Write(void)
 {
 	ssize_t	len;
 
@@ -55,29 +55,29 @@ void User::Write(void)
 	{
 		if (errno == EAGAIN)
 			return ;
-		Server::instance->users().DelUser(this->socket_);
+		Server::instance->clients().DelClient(this->socket_);
 		return ;
 	}
 	wbuf_.clear();
 }
 
-void User::Write(std::string const &msg)
+void Client::Write(std::string const &msg)
 {
 	Log() << "Connection " << this->socket_ << ": " << msg;
 	wbuf_ += msg + '\n';
 }
 
-void User::Write(std::string const &prefix, std::string const &msg)
+void Client::Write(std::string const &prefix, std::string const &msg)
 {
 	Write(":" + prefix + " " + msg);
 }
 
-void User::WritePrefix(std::string const &msg)
+void Client::WritePrefix(std::string const &msg)
 {
 	Write(Server::instance->servername(), msg);
 }
 
-void User::Request(void)
+void Client::Request(void)
 {
 	size_t pos(0);
 	std::string command("");
@@ -99,7 +99,7 @@ void User::Request(void)
 		if (command.size() > COMMAND_LEN)
 		{
 			Log() << "Connection " << this->socket_ << " request too long (max ." << COMMAND_LEN << ")";
-			Server::instance->users().DelUser(this->socket_);
+			Server::instance->clients().DelClient(this->socket_);
 			return ;
 		}
 		rbuf_.clear();
@@ -107,47 +107,74 @@ void User::Request(void)
 	}
 }
 
-int User::socket(void) const
+void Client::Login(void)
+{
+	if (!Server::instance->password().empty() && password_ != Server::instance->password())
+		return Server::instance->clients().DelClient(socket());
+	registered_ = true;
+	WritePrefix(RPL_WELCOME(nickname_, clientname_));
+	WritePrefix(RPL_YOURHOST(nickname_, "*", "irc-0.0.1"));
+	// WritePrefix(RPL_CREATED(nickname(), Server::instance->startup_time()));
+	WritePrefix(RPL_MYINFO(nickname_, "*", "irc-0.0.1"));
+}
+
+
+int Client::socket(void) const
 {
 	return (this->socket_);
 }
 
-time_t User::last_activity(void) const
+time_t Client::last_activity(void) const
 {
 	return (this->last_activity_);
 }
 
-bool User::registered(void) const
+bool Client::registered(void) const
 {
 	return (this->registered_);
 }
 
-std::string User::rbuf(void) const
+std::string Client::rbuf(void) const
 {
 	return (this->rbuf_);
 }
 
-std::string User::wbuf(void) const
+std::string Client::wbuf(void) const
 {
 	return (this->wbuf_);
 }
 
-std::string User::nickname(void) const
+std::string Client::clientname(void) const
 {
 	return (this->nickname_);
 }
 
-std::string User::password(void) const
+void	Client::set_clientname(std::string clientname)
+{
+	this->clientname_ = clientname;
+}
+
+std::string Client::nickname(void) const
+{
+	return (this->nickname_);
+}
+
+void	Client::set_nickname(std::string nickname)
+{
+	this->nickname_ = nickname;
+}
+
+std::string Client::password(void) const
 {
 	return (this->password_);
 }
 
-void User::set_password(std::string pass)
+void Client::set_password(std::string pass)
 {
 	this->password_ = pass;
 }
 
-std::string User::mask(void) const
+std::string Client::mask(void) const
 {
-	return (this->nickname_ + "!" + this->username_ + "@" + this->hostname_);
+	return (this->nickname_ + "!" + this->clientname_ + "@" + this->hostname_);
 }
