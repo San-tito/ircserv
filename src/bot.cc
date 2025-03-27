@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 16:41:18 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 17:09:54 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,12 @@
 
 Bot *Bot::instance(0);
 
-Bot::Bot(std::string host, int port)
+Bot::Bot(std::string host, int port, std::string password)
 {
 	instance = this;
 	SetSignals();
 	InitConnection(port, host);
+	Authenticate(password);
 }
 
 Bot::~Bot(void)
@@ -48,8 +49,27 @@ void Bot::InitConnection(int port, std::string &host)
 			reinterpret_cast<struct sockaddr *>(&this->address_),
 			sizeof(this->address_)) != 0)
 	{
-		close(this->sock_);
 		Log() << "Can't connect to [" << listen_addr << "]:" << port << ": " << strerror(errno) << '!';
+		Exit(EXIT_FAILURE);
+	}
+}
+
+void Bot::Authenticate(std::string password)
+{
+	if (!password.empty())
+		Write("PASS " + password);
+	Write("NICK " + NICKNAME);
+	Write("USER " + USERNAME + " 0 * :realname");
+}
+
+void Bot::Write(std::string const &msg)
+{
+	ssize_t	len;
+
+	len = write(this->sock_, msg.c_str(), msg.size());
+	if (len < 0)
+	{
+		Log() << "Write error: " << strerror(errno) << '!';
 		Exit(EXIT_FAILURE);
 	}
 }
@@ -104,9 +124,9 @@ int	main(int argc, char **argv)
 {
 	int	port;
 
-	if (argc != 3)
+	if (argc != 4)
 	{
-		std::cerr << "Usage: " << argv[0] << " <host> <port>\n";
+		std::cerr << "Usage: " << argv[0] << " <host> <port> <password>\n";
 		return (EXIT_FAILURE);
 	}
 	port = ParsePort(argv[2]);
@@ -115,7 +135,7 @@ int	main(int argc, char **argv)
 		std::cerr << "illegal port number " << argv[2] << "!\n";
 		return (EXIT_FAILURE);
 	}
-	new Bot(argv[1], port);
+	new Bot(argv[1], port, argv[3]);
 	Bot::instance->Run();
 	return (EXIT_SUCCESS);
 }
