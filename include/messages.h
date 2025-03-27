@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:41:46 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 17:56:44 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 20:37:37 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define RPL_MYINFO(nick, server, version) "004 " + (nick) + " " + (server) + " ircserv-" + (version)
 # define RPL_UMODEIS(client, modes) "221 " + (client) + " +" + (modes)
 # define RPL_CHANNELMODEIS(channel, client, modes) "324 " + (channel) + " " + (client) + " +" + (modes)
-# define RPL_NOTOPIC(channel, server) "331 " + (channel) + " " + (server) + " :No topic is set"
+# define RPL_NOTOPIC(server, channel) "331 " + (channel) + " " + (server) + " :No topic is set"
 # define RPL_TOPIC(channel, server, topic) "332 " + (channel) + " " + (server) + " :" + (topic)
 # define RPL_INVITING(client, channel, inviter) "341 " + (client) + " " + (channel) + " " + (inviter)
 # define ERR_NOSUCHNICK(nick, target) "401 " + (nick) + " " + (target) + " :No such nick or channel name"

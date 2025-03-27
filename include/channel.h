@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 23:42:02 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 16:47:41 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 21:11:37 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ class Channel
 	bool IsInvited(Client *client) const;
 	bool IsOperator(Client *client) const;
 	bool IsAllowedJoin(Client *client, const std::string &key);
-	void Join(Client *client);
 	void Part(Client *client, const std::string &reason);
 	void Kick(Client *client, Client *target, const std::string &reason);
-	void Mode(Client *client, std::vector<std::string> &params);
+	void Mode(Client *client, const std::vector<std::string> &params);
 
 	std::string name(void) const;
 	std::string topic(void) const;
 	std::string key(void) const;
+	void	set_topic(std::string topic);
 
   private:
 	std::string name_;

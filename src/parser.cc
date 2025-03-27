@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 15:45:34 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 20:31:10 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ CommandParser::CommandParser(void)
 {
 	commands_["INVITE"] = new Invite;
 	commands_["JOIN"] = new Join;
-	// commands_["KICK"] = new Command::Kick;
-	// commands_["MODE"] = new Command::Mode;
+	commands_["KICK"] = new Kick;
+	commands_["MODE"] = new Mode;
 	commands_["NICK"] = new Nick;
-	// commands_["PART"] = new Command::Part;
+	commands_["PART"] = new Part;
 	commands_["PASS"] = new Pass;
 	commands_["PRIVMSG"] = new PrivMsg;
-	// commands_["QUIT"] = new Command::Quit;
-	// commands_["TOPIC"] = new Command::Topic;
+	commands_["QUIT"] = new Quit;
+	commands_["TOPIC"] = new Topic;
 	commands_["USER"] = new User;
 }
 

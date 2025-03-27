@@ -18,7 +18,7 @@ class ChannelManager
 	bool AddChannel(Channel *channel);
 	bool IsValidName(const std::string &name);
 	void RemoveChannel(const std::string &name);
-	void Mode(Client *client, std::vector<std::string> &params);
+	void Mode(Client *client, const std::vector<std::string> &params);
 	bool Join(Client *client, const std::string &name);
 	void Part(Client *client, const std::string &channelName,
 		const std::string &reason);

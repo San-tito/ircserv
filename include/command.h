@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 15:46:38 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 20:31:45 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,46 @@ class PrivMsg : public Command
 {
 	public:
 		PrivMsg(void);
+
+		void Execute(Client *client, const std::vector<std::string> &params);
+};
+
+class Part : public Command
+{
+	public:
+		Part(void);
+
+		void Execute(Client *client, const std::vector<std::string> &params);
+};
+
+class Kick : public Command
+{
+	public:
+		Kick(void);
+
+		void Execute(Client *client, const std::vector<std::string> &params);
+};
+
+class Quit : public Command
+{
+	public:
+		Quit(void);
+
+		void Execute(Client *client, const std::vector<std::string> &params);
+};
+
+class Mode : public Command
+{
+	public:
+		Mode(void);
+
+		void Execute(Client *client, const std::vector<std::string> &params);
+};
+
+class Topic : public Command
+{
+	public:
+		Topic(void);
 
 		void Execute(Client *client, const std::vector<std::string> &params);
 };

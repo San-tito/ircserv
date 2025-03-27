@@ -45,7 +45,7 @@ void ChannelManager::RemoveChannel(const std::string &name)
 	}
 }
 
-void ChannelManager::Mode(Client *client, std::vector<std::string> &params)
+void ChannelManager::Mode(Client *client, const std::vector<std::string> &params)
 // falta implementar muchas cosas
 {
 	Channel *channel;
@@ -79,7 +79,7 @@ bool	ChannelManager::Join(Client *client, const std::string &name)
 		channel = new Channel(name);
 		AddChannel(channel);
 	}
-	channel->Join(client);
+	channel->AddMember(client);
 	return (true);
 }
 

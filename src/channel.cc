@@ -24,6 +24,11 @@ std::string Channel::key(void) const
 	return (key_);
 }
 
+void	Channel::set_topic(std::string topic)
+{
+	topic_ = topic;
+}
+
 void Channel::AddMode(char mode)
 {
 	modes_.insert(mode);
@@ -110,7 +115,7 @@ void Channel::Write(Client *sender, const std::string &message)
 	}
 }
 
-void Channel::Mode(Client *client, std::vector<std::string> &params)
+void Channel::Mode(Client *client, const std::vector<std::string> &params)
 // falta implementar muchas cosas
 {
 	char mode;
@@ -133,11 +138,6 @@ void Channel::Mode(Client *client, std::vector<std::string> &params)
 			DelMode(params[i][1]);
 		}
 	}
-}
-
-void Channel::Join(Client *client)
-{
-	AddMember(client);
 }
 
 void Channel::Part(Client *client, const std::string &reason)
