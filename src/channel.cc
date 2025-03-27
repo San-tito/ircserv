@@ -44,6 +44,11 @@ void Channel::AddInvite(Client *client)
 	invites_[client->nickname()] = client;
 }
 
+bool Channel::IsMember(Client *client) const
+{
+	return (members_.find(client->nickname()) != members_.end());
+}
+
 bool Channel::IsInvited(Client *client) const
 {
 	return (invites_.find(client->nickname()) != invites_.end());
@@ -65,6 +70,26 @@ bool Channel::IsOperator(Client *client) const
 	return (operators_.find(client->nickname()) != operators_.end());
 }
 
+bool Channel::IsAllowedJoin(Client *client, const std::string &key)
+{
+	if (HasMode('i') && !IsInvited(client))
+	{
+		client->WritePrefix(ERR_INVITEONLYCHAN(client->nickname(), name_));
+		return (false);
+	}
+	if (HasMode('k') && key_ != key)
+	{
+		client->WritePrefix(ERR_BADCHANNELKEY(client->nickname(), key));
+		return (false);
+	}
+	if (HasMode('l') && max_members_ <= Channel::members_.size()) // ver mejor
+	{
+		client->WritePrefix(ERR_CHANNELISFULL(client->nickname(), name_));
+		return (false);
+	}
+	return (true);
+}
+
 void Channel::AddOperator(Client *client)
 {
 	operators_[client->nickname()] = client;
@@ -83,14 +108,6 @@ void Channel::Write(Client *sender, const std::string &message)
 		if (it->second != sender)
 			it->second->Write(sender->mask(), message);
 	}
-}
-
-Client *Channel::IsMember(const std::string &name)
-{
-	std::map<std::string, Client *>::iterator it = members_.find(name);
-	if (it != members_.end())
-		return (it->second);
-	return (0);
 }
 
 void Channel::Mode(Client *client, std::vector<std::string> &params)

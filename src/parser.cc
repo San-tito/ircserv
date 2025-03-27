@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 14:35:56 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 15:45:34 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ CommandParser::CommandParser(void)
 	commands_["NICK"] = new Nick;
 	// commands_["PART"] = new Command::Part;
 	commands_["PASS"] = new Pass;
-	// commands_["PRIVMSG"] = new Command::Privmsg;
+	commands_["PRIVMSG"] = new PrivMsg;
 	// commands_["QUIT"] = new Command::Quit;
 	// commands_["TOPIC"] = new Command::Topic;
 	commands_["USER"] = new User;
@@ -101,7 +101,7 @@ void CommandParser::ParseParams(std::string &request,
 	}
 }
 
-void CommandParser::ProcessCommand(Client *client, std::string &request)
+void	CommandParser::ProcessCommand(Client *client, std::string &request)
 {
 	std::string prefix("");
 	std::string command("");
@@ -133,3 +133,5 @@ void CommandParser::ProcessCommand(Client *client, std::string &request)
 		return ;
 	commands_[command]->Execute(client, params);
 }
+
+

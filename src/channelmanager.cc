@@ -59,20 +59,20 @@ void ChannelManager::Mode(Client *client, std::vector<std::string> &params)
 	channel->Mode(client, params);
 }
 
-void ChannelManager::Join(Client *client, const std::string &name)
+bool	ChannelManager::Join(Client *client, const std::string &name)
 {
 	Channel	*channel;
 
 	if (!IsValidName(name))
 	{
-		// client->WriteErr(ERR_NOSUCHCHANNEL(client->getNick(), name));
-		return ;
+		client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), name));
+		return (false);
 	}
 	channel = Search(name);
 	if (channel)
 	{
-		if (channel->IsMember(client->nickname()))
-			return ;
+		if (channel->IsMember(client))
+			return (false);
 	}
 	else
 	{
@@ -80,6 +80,7 @@ void ChannelManager::Join(Client *client, const std::string &name)
 		AddChannel(channel);
 	}
 	channel->Join(client);
+	return (true);
 }
 
 void ChannelManager::Part(Client *client, const std::string &channelName,
@@ -101,7 +102,7 @@ void ChannelManager::PartAll(Client *client)
 	std::map<std::string, Channel *>::iterator it = channels_.begin();
 	for (; it != channels_.end(); ++it)
 	{
-		if (it->second->IsMember(client->nickname()))
+		if (it->second->IsMember(client))
 			it->second->Part(client, "");
 	}
 }
@@ -109,37 +110,20 @@ void ChannelManager::PartAll(Client *client)
 void ChannelManager::Kick(Client *client, const std::string &nick,
 	const std::string &channelName, const std::string &reason)
 {
-	Channel	*channel;
-
-	channel = Search(channelName);
 	Client *target(Server::instance->clients().Search(nick));
 	if (!target)
-	{
-		return ;
-		// return (client->WriteErr(ERR_NOSUCHNICK(client->nickname(), nick));
-	}
-	if (!channel)
-	{
-		// client->WriteErr(ERR_NOSUCHCHANNEL(client->nickname(), channelName));
-		return ;
-	}
-	if (!channel->IsMember(client->nickname()))
-	{
-		return ;
-		// return (client->WriteErr(ERR_NOTONCHANNEL(client->nickname(),
-		// channel)));void
-	}
-	if (!channel->IsMember(nick))
-	{
-		return ;
-		// return (client->WriteErr(ERR_CLIENTNOTINCHANNEL(client->nickname(),
-		//		target->getNick(), channel)));
-	}
-	if (!channel->IsOperator(client))
-	{
-		return ;
-		// return (client->WriteErr(ERR_CHANOPPRIVTOOLOW(client->nickname(),
-		//			channel)));
-	}
-	channel->Kick(client, target, reason);
+		return (client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), nick)));
+	Channel *chan(Server::instance->channels().Search(channelName));
+	if (!chan)
+		return (client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), channelName)));
+	if (chan->IsMember(client))
+		return (client->WritePrefix(ERR_NOTONCHANNEL(client->nickname(), channelName)));
+	if (chan->IsMember(target))
+		return (client->WritePrefix(ERR_USENOTINCHANNEL(client->nickname(), target->nickname(), channelName)));
+	if (!chan->IsOperator(client))
+		return (client->WritePrefix(ERR_CHANOPPRIVTOOLOW(client->nickname(), channelName)));
+	chan->RemoveMember(target);
+	client->Write("KICK " + channelName + " " + nick + " :" + reason);
+	chan->Write(client, "KICK " + channelName + " " + nick + " :" + reason);
+	// Log::Info() << "User " << nick << " was kicked from channel " << channel << " by " << client->getNick() << " (" << reason << ")\n";
 }

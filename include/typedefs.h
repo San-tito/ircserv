@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:34:31 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 23:49:15 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 16:29:29 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 class	Server;
 class	Listener;
+class   Channel;
 class	Client;
-class	Channel;
 class	Command;
 
 #endif /* TYPEDEFS_H */

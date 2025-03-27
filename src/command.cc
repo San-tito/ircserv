@@ -6,16 +6,15 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 15:05:58 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 18:03:05 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "command.h"
 #include "server.h"
 
-Command::Command(std::string name, int min, int max,
-	bool register_req) : name_(name), min_(min), max_(max),
-	register_req_(register_req)
+Command::Command(std::string name, int min, int max, bool register_req)
+		: name_(name), min_(min), max_(max), register_req_(register_req)
 {
 }
 
@@ -90,7 +89,7 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 {
 	if (params.size() == 1 && params[0] == "0")
 		return (Server::instance->channels().PartAll(client));
-	// bool				op(false);
+	bool	op(false);
 	std::string key;
 	std::string chan_name;
 	std::stringstream key_ss;
@@ -103,11 +102,10 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 	}
 	while (std::getline(chan_ss, chan_name, ','))
 	{
-		/*
 		Channel *chan(Server::instance->channels().Search(chan_name));
 		if (chan)
 		{
-			if (chan->IsMember(client) || !JoinAllowed(client, chan, key))
+			if (chan->IsMember(client) || !chan->IsAllowedJoin(client, key))
 				continue ;
 		}
 		else if (chan_name[0] != '+')
@@ -119,10 +117,9 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 		if (op)
 			chan->AddOperator(client);
 		chan->Write(client, name_ + " :" + chan->name());
-		client->Write(name_ + " :" + chan->getName());
+		client->Write(name_ + " :" + chan->name()); // BEFORE-> client->Write(client, name_ + " :" + chan->name());
 		if (params.size() > 1)
 			std::getline(key_ss, key, ',');
-		*/
 	}
 	/*while (std::getline(chan_ss, channame, ','))
 	{
@@ -216,8 +213,7 @@ void User::Execute(Client *client, const std::vector<std::string> &params)
 	if (client->registered())
 		return (client->WritePrefix(ERR_ALREADYREGISTRED(client->nickname())));
 	if (params.size() != 4)
-		return (client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(),
-					name_)));
+		return (client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(), name_)));
 	if (!client->password().empty() || !client->nickname().empty())
 	{
 		if (params[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-@._") != std::string::npos)
@@ -229,4 +225,40 @@ void User::Execute(Client *client, const std::vector<std::string> &params)
 	}
 	else
 		client->WritePrefix(ERR_NOTREGISTERED(client->nickname()));
+}
+
+PrivMsg::PrivMsg(void) : Command("PRIVMSG", 0, -1, true)
+{
+}
+
+void PrivMsg::Execute(Client *client, const std::vector<std::string> &params)
+{
+	if (params.size() == 0)
+		return (client->WritePrefix(ERR_NORECIPIENT(client->nickname(), name_)));
+	else if (params.size() == 1)
+		return (client->WritePrefix(ERR_NOTEXTTOSEND(client->nickname())));
+	else if (params.size() != 2)
+		return (client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(), name_)));
+	std::string			target;
+	std::stringstream	ss(params[0]);
+	while (std::getline(ss, target, ','))
+	{
+		Client	*dest(0);
+		Channel	*chan(0);
+		if (target.find('!') != std::string::npos)
+			dest = Server::instance->clients().Search(target);
+		else
+		{
+			std::string nick(target.substr(0, target.find('!')));
+			dest = Server::instance->clients().Search(nick);
+		}
+		if (dest)
+			dest->Write(client->mask(), name_ + " " + client->nickname() + " :" + params[1]);
+		else if ((chan = Server::instance->channels().Search(target)))
+			chan->Write(client, name_ + " " + client->nickname() + " :" + params[1]);
+			// chan->Write(client, "PRIVMSG " + target + " :" + params[1]);
+		else
+			client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), target));		
+	}
+	
 }

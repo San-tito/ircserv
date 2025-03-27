@@ -6,13 +6,14 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 00:20:00 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 15:46:38 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMAND_H
 # define COMMAND_H
 
+# include "channel.h"
 # include "client.h"
 # include <string>
 # include <vector>
@@ -75,10 +76,18 @@ class Nick : public Command
 
 class User : public Command
 {
-  public:
-	User(void);
+	public:
+		User(void);
 
-	void Execute(Client *client, const std::vector<std::string> &params);
+		void Execute(Client *client, const std::vector<std::string> &params);
+};
+
+class PrivMsg : public Command
+{
+	public:
+		PrivMsg(void);
+
+		void Execute(Client *client, const std::vector<std::string> &params);
 };
 
 #endif /* COMMAND_H */
