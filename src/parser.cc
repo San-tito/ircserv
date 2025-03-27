@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 22:02:26 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:35:56 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ CommandParser::CommandParser(void)
 	// commands_["PRIVMSG"] = new Command::Privmsg;
 	// commands_["QUIT"] = new Command::Quit;
 	// commands_["TOPIC"] = new Command::Topic;
-	// commands_["USER"] = new User;
+	commands_["USER"] = new User;
 }
 
 CommandParser::~CommandParser(void)
@@ -123,7 +123,8 @@ void CommandParser::ProcessCommand(Client *client, std::string &request)
 	if (commands_.find(command) == commands_.end())
 	{
 		if (client->registered())
-			client->WritePrefix(ERR_UNKNOWNCOMMAND(client->nickname(), command));
+			client->WritePrefix(ERR_UNKNOWNCOMMAND(client->nickname(),
+					command));
 		return ;
 	}
 	if (!commands_[command]->ClientRegistered(client))

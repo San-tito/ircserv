@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 00:32:51 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 14:34:50 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,10 @@ Pass::Pass(void) : Command("PASS", 1, 2, false)
 void Pass::Execute(Client *client, const std::vector<std::string> &params)
 {
 	if (client->password().empty())
+	{
+		Log() << "Connection " << client->socket() << ": got valid " << name_ << " command ...";
 		client->set_password(params[0]);
+	}
 	else
 		client->WritePrefix(ERR_ALREADYREGISTRED(client->nickname()));
 }
@@ -188,12 +191,14 @@ void Nick::Execute(Client *client, const std::vector<std::string> &params)
 	}
 	if (!client->registered())
 	{
+		Log() << "Connection " << client->socket() << ": got valid " << name_ << " command ...";
 		client->set_nickname(params[0]);
 		if (!client->username().empty())
 			return (client->Login());
 	}
 	else
 	{
+		Log() << "Connection " << client->socket() << ": changed nickname to " << params[0];
 		client->set_nickname(params[0]);
 		client->Write(client->mask(), name_ + " :" + params[0]);
 	}
@@ -214,6 +219,7 @@ void User::Execute(Client *client, const std::vector<std::string> &params)
 	{
 		if (params[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-@._") != std::string::npos)
 			return (Server::instance->clients().DelClient(client->socket()));
+		Log() << "Connection " << client->socket() << ": got valid " << name_ << " command ...";
 		client->set_username(params[0]);
 		if (!client->nickname().empty())
 			return (client->Login());

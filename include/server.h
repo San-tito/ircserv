@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 23:49:03 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 14:41:23 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 # define SERVER_H
 
 # include "channelmanager.h"
+# include "clientmanager.h"
 # include "eventmanager.h"
 # include "listener.h"
 # include "logging.h"
 # include "parser.h"
 # include "typedefs.h"
-# include "clientmanager.h"
 # include <algorithm>
 # include <cfloat>
 # include <climits>
@@ -45,7 +45,7 @@ class Server
 	void Run(void);
 	void Exit(int status);
 
-	time_t startup_time(void) const;
+	std::string startup_time(void) const;
 	std::string password(void) const;
 	std::string servername(void) const;
 	ClientManager &clients(void);

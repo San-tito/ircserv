@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 00:02:27 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 14:47:26 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,14 +109,17 @@ void Client::Request(void)
 
 void Client::Login(void)
 {
-	if (!Server::instance->password().empty()
-		&& password_ != Server::instance->password())
+	std::string pass(Server::instance->password());
+	if (!pass.empty() && password_ != pass)
+	{
+		Log() << "Connection " << this->socket_ << " rejected: Bad server password";
 		return (Server::instance->clients().DelClient(socket()));
+	}
 	registered_ = true;
-	WritePrefix(RPL_WELCOME(nickname_, username_));
-	WritePrefix(RPL_YOURHOST(nickname_, "*", "irc-0.0.1"));
-	// WritePrefix(RPL_CREATED(nickname(), Server::instance->startup_time()));
-	WritePrefix(RPL_MYINFO(nickname_, "*", "irc-0.0.1"));
+	WritePrefix(RPL_WELCOME(nickname_, mask()));
+	WritePrefix(RPL_YOURHOST(nickname_, Server::instance->servername(), "4.2"));
+	WritePrefix(RPL_CREATED(nickname(), Server::instance->startup_time()));
+	WritePrefix(RPL_MYINFO(nickname_, Server::instance->servername(), "iklot"));
 }
 
 int Client::socket(void) const

@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:51:16 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:42:44 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,13 @@ std::string Server::password(void) const
 	return (this->password_);
 }
 
-time_t Server::startup_time(void) const
+std::string Server::startup_time(void) const
 {
-	return (this->startup_time_);
+	char time[64];
+
+	strftime(time, sizeof(time), "%a %b %d %Y at %H:%M:%S",
+		localtime(&this->startup_time_));
+	return (time);
 }
 
 std::string Server::servername(void) const
