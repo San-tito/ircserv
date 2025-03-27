@@ -6,7 +6,7 @@
 #    By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/22 20:09:04 by sguzman           #+#    #+#              #
-#    Updated: 2025/03/26 23:41:43 by sguzman          ###   ########.fr        #
+#    Updated: 2025/03/27 16:22:28 by sguzman          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRCS         = channel.cc \
 			   channelmanager.cc \
 			   client.cc \
 			   clientmanager.cc \
+			   connection.cc \
 			   command.cc \
 			   event.cc \
 			   eventmanager.cc \
@@ -44,6 +45,7 @@ SRCS         = channel.cc \
 			   parser.cc \
 			   server.cc 
 BOT          = bot.cc  \
+			   connection.cc \
 			   logging.cc
 MAIN         = main.cc
 

@@ -6,21 +6,11 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:20:19 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/24 21:04:05 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 19:33:22 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "server.h"
-
-int	ParsePort(char *arg)
-{
-	char	*endptr;
-
-	int port(strtol(arg, &endptr, 10));
-	if (port > 0 && port < 0xFFFF && *endptr == '\0')
-		return (port);
-	return (-1);
-}
 
 int	main(int argc, char **argv)
 {
@@ -31,7 +21,7 @@ int	main(int argc, char **argv)
 		std::cerr << "Usage: " << argv[0] << " <port> <password>\n";
 		return (EXIT_FAILURE);
 	}
-	port = ParsePort(argv[1]);
+	port = Connection::ParsePort(argv[1]);
 	if (port < 0)
 	{
 		std::cerr << "illegal port number " << argv[1] << "!\n";
