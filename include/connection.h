@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   listener.h                                         :+:      :+:    :+:   */
+/*   connection.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 16:26:58 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 16:17:34 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LISTENER_H
-# define LISTENER_H
+#ifndef CONNECTION_H
+# define CONNECTION_H
 
-# include "connection.h"
-# include "server.h"
+# include "logging.h"
+# include <arpa/inet.h>
+# include <cerrno>
+# include <cstdlib>
+# include <cstring>
+# include <fcntl.h>
+# include <netinet/in.h>
+# include <sys/socket.h>
+# include <unistd.h>
 
-class Listener
+class Connection
 {
   public:
-	Listener(int port, std::string &listen_addr);
-	~Listener(void);
-
-  private:
-	int sock_;
-	struct sockaddr_in address_;
+	static bool InitSocket(int socket);
+	static bool InitAddress(struct sockaddr_in *addr, int port,
+		const char *listen_addr);
 };
 
-#endif /* LISTENER_H */
+#endif /* CONNECTION_H */

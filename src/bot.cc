@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/24 21:26:38 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 16:41:18 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,44 @@
 
 Bot *Bot::instance(0);
 
-Bot::Bot(std::string const &host, int port) : host_(host), port_(port)
+Bot::Bot(std::string host, int port)
 {
 	instance = this;
 	SetSignals();
+	InitConnection(port, host);
 }
 
 Bot::~Bot(void)
 {
+	close(this->sock_);
+}
+
+void Bot::InitConnection(int port, std::string &host)
+{
+	std::string listen_addr(host);
+	struct hostent *h(gethostbyname(host.c_str()));
+	if (h)
+		listen_addr = h->h_name;
+	if (!Connection::InitAddress(&this->address_, port, listen_addr.c_str()))
+	{
+		Log() << "Can't connect on [" << listen_addr << "]:" << port << ": Failed to parse IP address!";
+		Exit(EXIT_FAILURE);
+	}
+	int af(this->address_.sin_family);
+	this->sock_ = socket(af, SOCK_STREAM, 0);
+	if (this->sock_ == -1)
+	{
+		Log() << "Can't create socket (af " << af << ") : " << strerror(errno) << '!';
+		Exit(EXIT_FAILURE);
+	}
+	if (connect(this->sock_,
+			reinterpret_cast<struct sockaddr *>(&this->address_),
+			sizeof(this->address_)) != 0)
+	{
+		close(this->sock_);
+		Log() << "Can't connect to [" << listen_addr << "]:" << port << ": " << strerror(errno) << '!';
+		Exit(EXIT_FAILURE);
+	}
 }
 
 void Bot::Run(void)
@@ -79,10 +109,10 @@ int	main(int argc, char **argv)
 		std::cerr << "Usage: " << argv[0] << " <host> <port>\n";
 		return (EXIT_FAILURE);
 	}
-	port = ParsePort(argv[1]);
+	port = ParsePort(argv[2]);
 	if (port < 0)
 	{
-		std::cerr << "illegal port number " << argv[1] << "!\n";
+		std::cerr << "illegal port number " << argv[2] << "!\n";
 		return (EXIT_FAILURE);
 	}
 	new Bot(argv[1], port);
