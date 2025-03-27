@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 17:09:10 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 17:33:59 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <string>
 # include <vector>
 
+# define READBUFFER_LEN 2048
 # define NICKNAME std::string("bot")
 # define USERNAME std::string("bot")
 
@@ -48,6 +49,7 @@ class Bot
 	void SetSignals(void);
 	void InitConnection(int port, std::string &listen_addr);
 	void Authenticate(std::string password);
+	void Read(void);
 	void Write(std::string const &msg);
 
 	int sock_;

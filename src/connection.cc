@@ -6,12 +6,21 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:08:49 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 16:17:43 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 19:33:11 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "connection.h"
 
+int Connection::ParsePort(char *arg)
+{
+	char	*endptr;
+
+	int port(strtol(arg, &endptr, 10));
+	if (port > 0 && port < 0xFFFF && *endptr == '\0')
+		return (port);
+	return (-1);
+}
 bool Connection::InitAddress(struct sockaddr_in *addr, int port,
 	const char *listen_addr)
 {

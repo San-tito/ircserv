@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 17:09:54 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 19:33:39 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,31 @@ void Bot::Authenticate(std::string password)
 	Write("USER " + USERNAME + " 0 * :realname");
 }
 
+void Bot::Read(void)
+{
+	ssize_t	len;
+	char	buf[READBUFFER_LEN];
+
+	len = read(this->sock_, buf, READBUFFER_LEN);
+	if (len == 0)
+	{
+		Log() << "Server close connection";
+		Exit(EXIT_FAILURE);
+	}
+	if (len < 0)
+	{
+		Log() << "Read error: " << strerror(errno) << '!';
+		Exit(EXIT_FAILURE);
+	}
+	buf[len] = '\0';
+}
+
 void Bot::Write(std::string const &msg)
 {
 	ssize_t	len;
 
-	len = write(this->sock_, msg.c_str(), msg.size());
+	std::string buff(msg + "\r\n");
+	len = write(this->sock_, buff.c_str(), buff.size());
 	if (len < 0)
 	{
 		Log() << "Write error: " << strerror(errno) << '!';
@@ -78,7 +98,7 @@ void Bot::Run(void)
 {
 	while (true)
 	{
-		// do something
+		Read();
 	}
 }
 
@@ -110,16 +130,6 @@ void Bot::SignalHandler(int sig)
 	}
 }
 
-int	ParsePort(char *arg)
-{
-	char	*endptr;
-
-	int port(strtol(arg, &endptr, 10));
-	if (port > 0 && port < 0xFFFF && *endptr == '\0')
-		return (port);
-	return (-1);
-}
-
 int	main(int argc, char **argv)
 {
 	int	port;
@@ -129,7 +139,7 @@ int	main(int argc, char **argv)
 		std::cerr << "Usage: " << argv[0] << " <host> <port> <password>\n";
 		return (EXIT_FAILURE);
 	}
-	port = ParsePort(argv[2]);
+	port = Connection::ParsePort(argv[2]);
 	if (port < 0)
 	{
 		std::cerr << "illegal port number " << argv[2] << "!\n";
