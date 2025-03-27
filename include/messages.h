@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:41:46 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:29:36 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 14:59:12 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@
 # define ERR_NICKNAMEINUSE(nick, target) "433 " + (nick) + " " + (target) + " :Nickname already in use"
 # define ERR_NOTONCHANNEL(channel, nick) "442 " + (channel) + " " + (nick) + " :You are not on that channel"
 # define ERR_CLIENTNOTINCHANNEL(channel, nick, target) "441 " + (channel) + " " + (nick) + " " + (target) + " :They aren't on that channel"
-# define ERR_NOTREGISTERED(command) "451 " + (command) + " :Connection not registered"
-# define ERR_NEEDMOREPARAMS(command, param) "461 " + (command) + " " + (param) + " :Syntax error"
+# define ERR_NOTREGISTERED(nick) "451 " + ((nick).empty() ? "*" : nick) + " :Connection not registered"
+# define ERR_NEEDMOREPARAMS(nick, param) "461 " + ((nick).empty() ? "*" : nick) + " " + (param) + " :Syntax error"
 # define ERR_ALREADYREGISTRED(command) "462 " + (command) + " :Connection already registered"
 # define ERR_CHANNELISFULL(channel, target) "471 " + (channel) + " " + (target) + " :Cannot join channel (+l) -- Channel is full, try later"
 # define ERR_UNKNOWNMODE(channel, mode, target) "472 " + (channel) + " " + (mode) + " :is unknown mode char for " + (target)

@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 14:34:50 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/27 15:05:58 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,19 +153,22 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 	}*/
 }
 
-Pass::Pass(void) : Command("PASS", 1, 2, false)
+Pass::Pass(void) : Command("PASS", 0, -1, false)
 {
 }
 
 void Pass::Execute(Client *client, const std::vector<std::string> &params)
 {
+	if (client->registered())
+		return (client->WritePrefix(ERR_ALREADYREGISTRED(client->nickname())));
+	if (params.size() != 1)
+		return (client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(),
+					name_)));
 	if (client->password().empty())
 	{
 		Log() << "Connection " << client->socket() << ": got valid " << name_ << " command ...";
 		client->set_password(params[0]);
 	}
-	else
-		client->WritePrefix(ERR_ALREADYREGISTRED(client->nickname()));
 }
 
 Nick::Nick(void) : Command("NICK", 1, 2, false)
