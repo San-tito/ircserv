@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 21:15:58 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/27 21:20:29 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,6 +330,7 @@ void	Quit::Execute(Client *client, const std::vector<std::string> &params)
 	Server::instance->clients().DelClient(client->socket());
 }
 
+
 Mode::Mode(void) : Command("MODE", 1, -1, true)
 {
 }
@@ -351,7 +352,10 @@ void	Mode::Execute(Client *client, const std::vector<std::string> &params)
 		client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), params[0]));
 }
 
-Topic::Topic(void) : Command("TOPIC", 1, 2, true) {}
+
+Topic::Topic(void) : Command("TOPIC", 1, 2, true)
+{
+}
 
 void	Topic::Execute(Client *client, const std::vector<std::string> &params)
 {
