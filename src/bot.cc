@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bot.cc                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 19:33:39 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/28 17:55:46 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,45 @@ void Bot::SignalHandler(int sig)
 		Bot::instance->Exit(EXIT_SUCCESS);
 		break ;
 	}
+}
+
+void Bot::Trim(std::string &str)
+{
+	size_t start(str.find_first_not_of(" \t\r\n"));
+	size_t end(str.find_last_not_of(" \t\r\n"));
+	if (start == std::string::npos || end == std::string::npos)
+		str.clear();
+	else
+		str = str.substr(start, end - start + 1);
+}
+
+void Bot::parseInstruction(std::string& request)
+{
+	std::string	action("");
+	std::string	msg;
+	std::vector<std::string>	users;
+
+	Trim(request);
+	size_t	pos = request.find(' ');
+	if (pos != std::string::npos)
+	{
+		action = request.substr(0, pos);
+		request = request.substr(pos + 1);
+	}
+	Trim(request);
+	pos = request.find(' ');
+	while (!request.empty())
+	{
+		pos = request.find(',');
+		if (pos != std::string::npos)
+		{
+			users.push_back(request.substr(0, pos));
+			request = request.substr(pos + 1);
+			Trim(request);
+		}
+	}
+	msg = request;
+	/*TODO*/
 }
 
 int	main(int argc, char **argv)

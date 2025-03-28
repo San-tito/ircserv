@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bot.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
+/*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 17:33:59 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/03/28 20:41:59 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@
 # include <vector>
 
 # define READBUFFER_LEN 2048
-# define NICKNAME std::string("bot")
-# define USERNAME std::string("bot")
+# define NICKNAME std::string("whisper")
+# define USERNAME std::string("whisper")
 
 class Bot
 {
@@ -52,8 +52,13 @@ class Bot
 	void Read(void);
 	void Write(std::string const &msg);
 
+	/*Parsing*/
+	void	Trim(std::string &str);
+	void	parseInstruction(std::string& request);
+	void	SaveUsers(std::vector<std::string>& users, std::string& ustr);
+
 	int sock_;
-	struct sockaddr_in address_;
+	struct sockaddr_in address_;	
 };
 
 #endif /* BOT_H */

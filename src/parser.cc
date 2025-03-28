@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 20:31:10 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/28 17:38:23 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,8 @@ void CommandParser::ParseParams(std::string &request,
 
 void	CommandParser::ProcessCommand(Client *client, std::string &request)
 {
-	std::string prefix("");
-	std::string command("");
+	std::string	prefix("");
+	std::string	command("");
 	std::vector<std::string> params;
 	if (!ParseCommand(request, prefix, command))
 	{
