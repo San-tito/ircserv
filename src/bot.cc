@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/31 18:12:32 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/31 22:11:45 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,9 +166,9 @@ std::vector<std::string>	Bot::userList(std::string users)
 
 void Bot::parseInstruction(std::string& request)
 {
-	std::string	action("");
-	std::string	msg("");
-	std::vector<std::string> users;
+	std::string	action;
+	std::string	users;
+	std::string	msg;
 
 	Trim(request);
 	size_t	pos = request.find(' ');
@@ -181,18 +181,17 @@ void Bot::parseInstruction(std::string& request)
 	pos = request.find(' ');
 	if (pos != std::string::npos)
 	{
-		users = userList(request.substr(0, pos));
+		users = request.substr(0, pos);
 		request = request.substr(pos + 1);
 	}
 	Trim(request);
 	msg = request;
-	int i = -1;
-	std::cout << action << std::endl;
-	while (++i < users.size())
-		std::cout << users[i] << std::endl;
-	std::cout << msg << std::endl;
+	std::cout << "ACTION = " << action << std::endl;
+	std::cout << "USERS = " << users << std::endl;
+	std::cout << "MSG= " << msg << std::endl;
 	/*TODO*/
 }
+
 
 int	main(int argc, char **argv)
 {
