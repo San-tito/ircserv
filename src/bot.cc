@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/28 17:55:46 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:12:32 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,11 +140,35 @@ void Bot::Trim(std::string &str)
 		str = str.substr(start, end - start + 1);
 }
 
+std::vector<std::string>	Bot::userList(std::string users)
+{
+	std::vector<std::string>	users_;
+
+	size_t	pos;
+
+	Trim(users);
+	while (!users.empty())
+	{
+		pos = users.find(',');
+		if (pos != std::string::npos)
+		{
+			users_.push_back(users.substr(0, pos));
+			users = users.substr(pos + 1);
+		}
+		else
+		{
+			users_.push_back(users);
+			break ;
+		}
+	}
+	return (users_);
+}
+
 void Bot::parseInstruction(std::string& request)
 {
 	std::string	action("");
-	std::string	msg;
-	std::vector<std::string>	users;
+	std::string	msg("");
+	std::vector<std::string> users;
 
 	Trim(request);
 	size_t	pos = request.find(' ');
@@ -155,17 +179,18 @@ void Bot::parseInstruction(std::string& request)
 	}
 	Trim(request);
 	pos = request.find(' ');
-	while (!request.empty())
+	if (pos != std::string::npos)
 	{
-		pos = request.find(',');
-		if (pos != std::string::npos)
-		{
-			users.push_back(request.substr(0, pos));
-			request = request.substr(pos + 1);
-			Trim(request);
-		}
+		users = userList(request.substr(0, pos));
+		request = request.substr(pos + 1);
 	}
+	Trim(request);
 	msg = request;
+	int i = -1;
+	std::cout << action << std::endl;
+	while (++i < users.size())
+		std::cout << users[i] << std::endl;
+	std::cout << msg << std::endl;
 	/*TODO*/
 }
 
