@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "clientmanager.h"
+#include "server.h"
 
 ClientManager::ClientManager(void)
 {
@@ -30,12 +30,14 @@ void ClientManager::AddClient(int fd)
 	Server::instance->events().AddClientSession(fd, POLLIN);
 }
 
-void ClientManager::DelClient(int fd)
+void ClientManager::CloseClient(int fd, const std::string &message)
 {
-	Log() << "Connection " << fd << " closed";
-	delete (clients[fd]);
-	clients.erase(fd);
-	Server::instance->events().DelEvent(fd);
+	Client	*client;
+
+	client = clients[fd];
+	client->set_closing(true);
+	client->Write("ERROR :Closing connection: " + message);
+	Log() << "Connection " << fd << " closed: " << message;
 }
 
 Client *ClientManager::Search(const std::string &name)
@@ -95,7 +97,23 @@ void ClientManager::CheckTimeouts(void)
 		if (!client->registered() && client->last_activity() < now - TIMEOUT)
 		{
 			Log() << "Unregistered connection " << client->socket() << " timed out";
-			DelClient(client->socket());
+			CloseClient(client->socket(), "timed out");
+		}
+	}
+}
+
+void ClientManager::Close(void)
+{
+	std::map<int, Client *>::iterator it(clients.begin());
+	while (it != clients.end())
+	{
+		Client *client(it->second);
+		it++;
+		if (client->closing())
+		{
+			Server::instance->events().DelEvent(client->socket());
+			clients.erase(client->socket());
+			delete (client);
 		}
 	}
 }
