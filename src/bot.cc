@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 13:17:04 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 16:59:51by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,17 +117,7 @@ void Bot::SetSignals(void)
 	signal(SIGQUIT, Bot::SignalHandler);
 }
 
-void Bot::SignalHandler(int sig)
-{
-	Log() << "Received signal: \"" << strsignal(sig) << '\"';
-	switch (sig)
-	{
-	case SIGINT:
-	case SIGTERM:
-	case SIGQUIT:
-		Bot::instance->Exit(EXIT_SUCCESS);
-		break ;
-	}
+void Bot::SignalHandler(int sig) { Log() << "Received signal: \"" << strsignal(sig) << '\"'; switch (sig) { case SIGINT: case SIGTERM: case SIGQUIT: Bot::instance->Exit(EXIT_SUCCESS); break ; }
 }
 
 void Bot::Trim(std::string &str)
@@ -164,44 +154,107 @@ std::vector<std::string>	Bot::userList(std::string users)
 	return (users_);
 }
 
-void Bot::ParseInstruction(std::string& request)
+void Bot::ParseAction(std::string& request)
 {
-	std::string	action;
-	std::string	users;
-	std::string	msg;
+        std::string     action;
+        std::string     users;
+        std::string     msg;
 
-	Trim(request);
-	size_t	pos = request.find(' ');
-	if (pos != std::string::npos)
-	{
-		action = request.substr(0, pos);
-		request = request.substr(pos + 1);
-	}
-	Trim(request);
-	pos = request.find(' ');
-	if (pos != std::string::npos)
-	{
-		users = request.substr(0, pos);
-		request = request.substr(pos + 1);
-	}
-	Trim(request);
-	msg = request;
-	std::cout << "ACTION = " << action << std::endl;
-	std::cout << "USERS = " << users << std::endl;
-	std::cout << "MSG= " << msg << std::endl;
-	/*TODO*/
+        Trim(request);
+        size_t  pos = request.find(' ');
+        if (pos != std::string::npos)
+        {
+                action = request.substr(0, pos);
+                request = request.substr(pos + 1);
+        }
+        Trim(request);
+        pos = request.find(' ');
+        if (pos != std::string::npos)
+        {
+                users = request.substr(0, pos);
+                request = request.substr(pos + 1);
+        }
+        Trim(request);
+        msg = request;
+        std::cout << "ACTION = " << action << std::endl;
+        std::cout << "USERS = " << users << std::endl;
+        std::cout << "MSG= " << msg << std::endl;
+        /*TODO*/
 }
 
-void	Bot::ProcessRequest(std::string& request)
+void Bot::ParseParams(std::string &request, std::vector<std::string> &params)
 {
-	std::string	command;
-	std::string	users;
+        size_t  pos;
 
-	if (ParseCmd(request, command))
-	{
-		this->Write("ERROR: Prefix without command.");
-		return ;
-	}
+        Trim(request);
+        while (!request.empty())
+        {
+                if (request[0] == ':')
+                {
+                        params.push_back(request.substr(1));
+                        break ;
+                }
+                pos = request.find(' ');
+                if (pos != std::string::npos)
+                {
+                        params.push_back(request.substr(0, pos));
+                        request = request.substr(pos + 1);
+                        Trim(request);
+                }
+                else
+                {
+                        params.push_back(request);
+                        break ;
+                }
+        }
+}
+
+bool    Bot::ParseCmd(std::string& request, std::string& command)
+{
+        size_t  pos;
+
+        Trim(request);
+        pos = request.find(' ');
+        if (request[0] == ':')
+        {
+                if (pos == std::string::npos)
+                        return (false);
+                request = request.substr(pos + 1);
+        }
+        pos = request.find(' ');
+        if (pos != std::string::npos)
+        {
+                command = request.substr(0, pos);
+                request = request.substr(pos + 1);
+        }
+        else
+        {
+                command = request;
+                request.clear();
+        }
+        return (true);
+}
+
+void    Bot::Parser(std::string request)
+{
+        std::string     command("");
+        std::vector<std::string> params;
+
+        if (!ParseCmd(request, command))
+        {
+                std::cerr << "ERROR :Prefix without command.";
+                return ;
+        }
+        ParseParams(request, params);
+        if (params.size() > MAX_PARAMS)
+        {
+                std::cerr << "ERROR : Too much params.";
+                return ;
+        }
+        std::cout << "COMMAND: " << command << std::endl;
+        std::cout << "USERS: " << params[0] << std::endl;
+        std::cout << "BOT MSG: " << params[1] << std::endl;
+        ParseAction(params[1]);
 }
 
 int	main(int argc, char **argv)
