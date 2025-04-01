@@ -14,7 +14,7 @@
 #include "logging.h"
 #include "server.h"
 
-Client::Client(int socket) : socket_(socket), registered_(false),
+Client::Client(int socket) : socket_(socket), closing_(false), registered_(false),
 	last_activity_(time(0)), hostname_("unknown")
 {
 }
@@ -32,14 +32,14 @@ void Client::Read(void)
 	len = read(this->socket_, buf, READBUFFER_LEN);
 	if (len == 0)
 	{
-		Server::instance->clients().DelClient(this->socket_);
+		Server::instance->clients().CloseClient(this->socket_, "closed by client");
 		return ;
 	}
 	if (len < 0)
 	{
 		if (errno == EAGAIN)
 			return ;
-		Server::instance->clients().DelClient(this->socket_);
+		Server::instance->clients().CloseClient(this->socket_, "Read error");
 		return ;
 	}
 	buf[len] = '\0';
@@ -55,7 +55,7 @@ void Client::Write(void)
 	{
 		if (errno == EAGAIN)
 			return ;
-		Server::instance->clients().DelClient(this->socket_);
+		Server::instance->clients().CloseClient(this->socket_, "Write error");
 		return ;
 	}
 	wbuf_.clear();
@@ -99,7 +99,7 @@ void Client::Request(void)
 		if (command.size() > COMMAND_LEN)
 		{
 			Log() << "Connection " << this->socket_ << " request too long (max ." << COMMAND_LEN << ")";
-			Server::instance->clients().DelClient(this->socket_);
+			Server::instance->clients().CloseClient(this->socket_, "Request too long");
 			return ;
 		}
 		rbuf_.clear();
@@ -113,7 +113,7 @@ void Client::Login(void)
 	if (!pass.empty() && password_ != pass)
 	{
 		Log() << "Connection " << this->socket_ << " rejected: Bad server password";
-		return (Server::instance->clients().DelClient(socket()));
+		return (Server::instance->clients().CloseClient(this->socket_, "Bad server password"));
 	}
 	registered_ = true;
 	WritePrefix(RPL_WELCOME(nickname_, mask()));
@@ -125,6 +125,16 @@ void Client::Login(void)
 int Client::socket(void) const
 {
 	return (this->socket_);
+}
+
+bool Client::closing(void) const
+{
+    return this->closing_;
+}
+
+void Client::set_closing(bool closing)
+{
+    closing_ = closing;
 }
 
 time_t Client::last_activity(void) const

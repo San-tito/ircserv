@@ -38,6 +38,8 @@ class Client
 		void Login(void);
 
 		int socket(void) const;
+		bool closing() const;
+		void set_closing(bool closing);
 		time_t last_activity(void) const;
 		bool registered(void) const;
 		std::string rbuf(void) const;
@@ -52,6 +54,7 @@ class Client
 
 	private:
 		int socket_;
+		bool closing_;
 		bool registered_;
 		time_t last_activity_;
 		std::string rbuf_;

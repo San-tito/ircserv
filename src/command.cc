@@ -204,7 +204,7 @@ void User::Execute(Client *client, const std::vector<std::string> &params)
 	if (!client->password().empty() || !client->nickname().empty())
 	{
 		if (params[0].find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+-@._") != std::string::npos)
-			return (Server::instance->clients().DelClient(client->socket()));
+			return (Server::instance->clients().CloseClient(client->socket(), "Invalid username"));
 		Log() << "Connection " << client->socket() << ": got valid " << name_ << " command ...";
 		client->set_username(params[0]);
 		if (!client->nickname().empty())
@@ -327,7 +327,7 @@ void	Quit::Execute(Client *client, const std::vector<std::string> &params)
 {
 	if (params.size() == 1)
 		Log() << client->nickname() << ": " << params[0];
-	Server::instance->clients().DelClient(client->socket());
+	Server::instance->clients().CloseClient(client->socket(), "Quit: " + (params.size() == 1 ? params[0] : ""));
 }
 
 Mode::Mode(void) : Command("MODE", 1, -1, true)

@@ -27,7 +27,7 @@ class	ClientManager
 		~ClientManager(void);
 
 		void AddClient(int fd);
-		void DelClient(int fd);
+		void CloseClient(int fd, const std::string &message);
 		Client *Search(const std::string &name);
 		bool IsValidNick(std::string nick);
 		void Read(void);
@@ -35,6 +35,7 @@ class	ClientManager
 		void Write(void);
 		void Write(int fd);
 		void CheckTimeouts(void);
+		void Close(void);
 
 	private:
 		std::map<int, Client *> clients;
