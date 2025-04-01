@@ -45,7 +45,8 @@ void ChannelManager::RemoveChannel(const std::string &name)
 	}
 }
 
-void ChannelManager::Mode(Client *client, const std::vector<std::string> &params)
+void ChannelManager::Mode(Client *client,
+	const std::vector<std::string> &params)
 // falta implementar muchas cosas
 {
 	Channel *channel;
@@ -59,7 +60,7 @@ void ChannelManager::Mode(Client *client, const std::vector<std::string> &params
 	channel->Mode(client, params);
 }
 
-bool	ChannelManager::Join(Client *client, const std::string &name)
+bool ChannelManager::Join(Client *client, const std::string &name)
 {
 	Channel	*channel;
 
@@ -115,13 +116,17 @@ void ChannelManager::Kick(Client *client, const std::string &nick,
 		return (client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), nick)));
 	Channel *chan(Server::instance->channels().Search(channelName));
 	if (!chan)
-		return (client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), channelName)));
+		return (client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(),
+					channelName)));
 	if (chan->IsMember(client))
-		return (client->WritePrefix(ERR_NOTONCHANNEL(client->nickname(), channelName)));
+		return (client->WritePrefix(ERR_NOTONCHANNEL(client->nickname(),
+					channelName)));
 	if (chan->IsMember(target))
-		return (client->WritePrefix(ERR_USENOTINCHANNEL(client->nickname(), target->nickname(), channelName)));
+		return (client->WritePrefix(ERR_USENOTINCHANNEL(client->nickname(),
+					target->nickname(), channelName)));
 	if (!chan->IsOperator(client))
-		return (client->WritePrefix(ERR_CHANOPPRIVTOOLOW(client->nickname(), channelName)));
+		return (client->WritePrefix(ERR_CHANOPPRIVTOOLOW(client->nickname(),
+					channelName)));
 	chan->RemoveMember(target);
 	client->Write("KICK " + channelName + " " + nick + " :" + reason);
 	chan->Write(client, "KICK " + channelName + " " + nick + " :" + reason);

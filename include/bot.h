@@ -6,15 +6,15 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 17:45:33castell         ###   ########.fr       */
+/*   Updated: 2025/04/01 19:42:39 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BOT_H
 # define BOT_H
 
-# include "connection.h"
 # include "logging.h"
+# include "tool.h"
 # include <algorithm>
 # include <cfloat>
 # include <climits>
@@ -28,6 +28,8 @@
 # include <sstream>
 # include <string>
 # include <vector>
+# include <iostream>
+#include <cstddef>
 
 # define READBUFFER_LEN 2048
 # define NICKNAME std::string("whisper")
@@ -65,9 +67,13 @@ class Bot
 	void	ParserAux(std::string& req, std::string& cmd, std::vector<std::string>& params);
 	void	SaveUsers(std::vector<std::string>& users, std::string& ustr);
 	std::vector<std::string>	userList(std::string users);
+	
+	/*Actions*/
+	void executeAction(std::string &action, std::vector<std::string> users,
+		std::string &msg);
 
 	int sock_;
-	struct sockaddr_in address_;	
+	struct sockaddr_in address_;
 };
 
 #endif /* BOT_H */

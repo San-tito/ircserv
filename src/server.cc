@@ -35,6 +35,7 @@ void Server::Run(void)
 {
 	while (true)
 	{
+		clients_.Close();
 		clients_.CheckTimeouts();
 		clients_.Read();
 		clients_.Write();

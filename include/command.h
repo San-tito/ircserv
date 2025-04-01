@@ -76,58 +76,58 @@ class Nick : public Command
 
 class User : public Command
 {
-	public:
-		User(void);
+  public:
+	User(void);
 
-		void Execute(Client *client, const std::vector<std::string> &params);
+	void Execute(Client *client, const std::vector<std::string> &params);
 };
 
 class PrivMsg : public Command
 {
-	public:
-		PrivMsg(void);
+  public:
+	PrivMsg(void);
 
-		void Execute(Client *client, const std::vector<std::string> &params);
+	void Execute(Client *client, const std::vector<std::string> &params);
 };
 
 class Part : public Command
 {
-	public:
-		Part(void);
+  public:
+	Part(void);
 
-		void Execute(Client *client, const std::vector<std::string> &params);
+	void Execute(Client *client, const std::vector<std::string> &params);
 };
 
 class Kick : public Command
 {
-	public:
-		Kick(void);
+  public:
+	Kick(void);
 
-		void Execute(Client *client, const std::vector<std::string> &params);
+	void Execute(Client *client, const std::vector<std::string> &params);
 };
 
 class Quit : public Command
 {
-	public:
-		Quit(void);
+  public:
+	Quit(void);
 
-		void Execute(Client *client, const std::vector<std::string> &params);
+	void Execute(Client *client, const std::vector<std::string> &params);
 };
 
 class Mode : public Command
 {
-	public:
-		Mode(void);
+  public:
+	Mode(void);
 
-		void Execute(Client *client, const std::vector<std::string> &params);
+	void Execute(Client *client, const std::vector<std::string> &params);
 };
 
 class Topic : public Command
 {
-	public:
-		Topic(void);
+  public:
+	Topic(void);
 
-		void Execute(Client *client, const std::vector<std::string> &params);
+	void Execute(Client *client, const std::vector<std::string> &params);
 };
 
 #endif /* COMMAND_H */

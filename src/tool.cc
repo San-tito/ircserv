@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   connection.cc                                      :+:      :+:    :+:   */
+/*   tool.cc                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:08:49 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 19:33:11 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/01 11:36:26 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "connection.h"
+#include "tool.h"
 
-int Connection::ParsePort(char *arg)
+void Tool::Trim(std::string &str)
+{
+	size_t start(str.find_first_not_of(" \t\r\n"));
+	size_t end(str.find_last_not_of(" \t\r\n"));
+	if (start == std::string::npos || end == std::string::npos)
+		str.clear();
+	else
+		str = str.substr(start, end - start + 1);
+}
+
+int Tool::ParsePort(char *arg)
 {
 	char	*endptr;
 
@@ -21,7 +31,7 @@ int Connection::ParsePort(char *arg)
 		return (port);
 	return (-1);
 }
-bool Connection::InitAddress(struct sockaddr_in *addr, int port,
+bool Tool::InitAddress(struct sockaddr_in *addr, int port,
 	const char *listen_addr)
 {
 	bzero(addr, sizeof(addr));
@@ -33,7 +43,7 @@ bool Connection::InitAddress(struct sockaddr_in *addr, int port,
 	return (true);
 }
 
-bool Connection::InitSocket(int socket)
+bool Tool::InitSocket(int socket)
 {
 	if (fcntl(socket, F_SETFL, O_NONBLOCK) != 0)
 	{

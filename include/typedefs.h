@@ -15,7 +15,7 @@
 
 class	Server;
 class	Listener;
-class   Channel;
+class	Channel;
 class	Client;
 class	Command;
 

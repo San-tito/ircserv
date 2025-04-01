@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:08:49 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 16:19:25 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/01 11:34:38 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Listener::Listener(int port, std::string &listen_addr)
 {
-	if (!Connection::InitAddress(&this->address_, port, listen_addr.c_str()))
+	if (!Tool::InitAddress(&this->address_, port, listen_addr.c_str()))
 	{
 		Log() << "Can't listen on [" << listen_addr << "]:" << port << ": Failed to parse IP address!";
 		Server::instance->Exit(EXIT_FAILURE);
@@ -26,7 +26,7 @@ Listener::Listener(int port, std::string &listen_addr)
 		Log() << "Can't create socket (af " << af << ") : " << strerror(errno) << '!';
 		Server::instance->Exit(EXIT_FAILURE);
 	}
-	if (!Connection::InitSocket(this->sock_))
+	if (!Tool::InitSocket(this->sock_))
 		Server::instance->Exit(EXIT_FAILURE);
 	if (bind(this->sock_, reinterpret_cast<struct sockaddr *>(&this->address_),
 			sizeof(this->address_)) != 0)
