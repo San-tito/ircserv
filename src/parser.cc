@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/31 18:04:36 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 17:55:22 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,17 @@ void CommandParser::ParseParams(std::string &request,
 	}
 }
 
+// PRIVMSG user1,user2 !msg secretUser,users :me llamo pedrito
+
 void	CommandParser::ProcessCommand(Client *client, std::string &request)
 {
 	std::string	prefix("");
 	std::string	command("");
 	std::vector<std::string> params;
+
 	if (!ParseCommand(request, prefix, command))
 	{
-		client->Write("ERROR :Prefix without command");
+		client->Write("ERROR :Prefix without command.");
 		return ;
 	}
 	if (!prefix.empty() && client->registered())
