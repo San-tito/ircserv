@@ -14,8 +14,8 @@
 #include "logging.h"
 #include "server.h"
 
-Client::Client(int socket) : socket_(socket), closing_(false), registered_(false),
-	last_activity_(time(0)), hostname_("unknown")
+Client::Client(int socket) : socket_(socket), closing_(false),
+	registered_(false), last_activity_(time(0)), hostname_("unknown")
 {
 }
 
@@ -32,7 +32,8 @@ void Client::Read(void)
 	len = read(this->socket_, buf, READBUFFER_LEN);
 	if (len == 0)
 	{
-		Server::instance->clients().CloseClient(this->socket_, "closed by client");
+		Server::instance->clients().CloseClient(this->socket_,
+			"closed by client");
 		return ;
 	}
 	if (len < 0)
@@ -99,7 +100,8 @@ void Client::Request(void)
 		if (command.size() > COMMAND_LEN)
 		{
 			Log() << "Connection " << this->socket_ << " request too long (max ." << COMMAND_LEN << ")";
-			Server::instance->clients().CloseClient(this->socket_, "Request too long");
+			Server::instance->clients().CloseClient(this->socket_,
+				"Request too long");
 			return ;
 		}
 		rbuf_.clear();
@@ -113,7 +115,8 @@ void Client::Login(void)
 	if (!pass.empty() && password_ != pass)
 	{
 		Log() << "Connection " << this->socket_ << " rejected: Bad server password";
-		return (Server::instance->clients().CloseClient(this->socket_, "Bad server password"));
+		return (Server::instance->clients().CloseClient(this->socket_,
+				"Bad server password"));
 	}
 	registered_ = true;
 	WritePrefix(RPL_WELCOME(nickname_, mask()));
@@ -129,12 +132,12 @@ int Client::socket(void) const
 
 bool Client::closing(void) const
 {
-    return this->closing_;
+	return (this->closing_);
 }
 
 void Client::set_closing(bool closing)
 {
-    closing_ = closing;
+	closing_ = closing;
 }
 
 time_t Client::last_activity(void) const

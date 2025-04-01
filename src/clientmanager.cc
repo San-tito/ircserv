@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "server.h"
 #include "clientmanager.h"
+#include "server.h"
 
 ClientManager::ClientManager(void)
 {
@@ -32,9 +32,10 @@ void ClientManager::AddClient(int fd)
 
 void ClientManager::CloseClient(int fd, const std::string &message)
 {
-    Client *client = clients[fd];
+	Client	*client;
 
-    client->set_closing(true);
+	client = clients[fd];
+	client->set_closing(true);
 	client->Write("ERROR :Closing connection: " + message);
 	Log() << "Connection " << fd << " closed: " << message;
 }

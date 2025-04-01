@@ -13,9 +13,9 @@
 #ifndef PARSER_H
 # define PARSER_H
 
+# include "client.h"
 # include "command.h"
 # include "messages.h"
-# include "client.h"
 # include <map>
 
 # define MAX_PARAMS 15

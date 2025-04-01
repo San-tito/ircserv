@@ -101,7 +101,7 @@ void CommandParser::ParseParams(std::string &request,
 	}
 }
 
-void	CommandParser::ProcessCommand(Client *client, std::string &request)
+void CommandParser::ProcessCommand(Client *client, std::string &request)
 {
 	std::string prefix("");
 	std::string command("");
@@ -133,5 +133,3 @@ void	CommandParser::ProcessCommand(Client *client, std::string &request)
 		return ;
 	commands_[command]->Execute(client, params);
 }
-
-
