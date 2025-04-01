@@ -24,7 +24,7 @@ std::string Channel::key(void) const
 	return (key_);
 }
 
-void	Channel::set_topic(std::string topic)
+void Channel::set_topic(std::string topic)
 {
 	topic_ = topic;
 }

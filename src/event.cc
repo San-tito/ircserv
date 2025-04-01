@@ -24,7 +24,7 @@ void NewConnection::Callback(short revents)
 		Log() << "Can't accept connection: " << strerror(errno) << '!';
 		Server::instance->Exit(EXIT_FAILURE);
 	}
-	if (!Connection::InitSocket(new_socket))
+	if (!Tool::InitSocket(new_socket))
 		return ;
 	Server::instance->clients().AddClient(new_socket);
 	Log() << "Connection " << new_socket << " accepted";

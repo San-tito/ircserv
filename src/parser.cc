@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:38:10 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 20:31:10 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:36:48 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,22 +35,12 @@ CommandParser::~CommandParser(void)
 		delete it->second;
 }
 
-void CommandParser::Trim(std::string &str)
-{
-	size_t start(str.find_first_not_of(" \t\r\n"));
-	size_t end(str.find_last_not_of(" \t\r\n"));
-	if (start == std::string::npos || end == std::string::npos)
-		str.clear();
-	else
-		str = str.substr(start, end - start + 1);
-}
-
 bool CommandParser::ParseCommand(std::string &request, std::string &prefix,
 	std::string &command)
 {
 	size_t	pos;
 
-	Trim(request);
+	Tool::Trim(request);
 	pos = request.find(' ');
 	if (request[0] == ':')
 	{
@@ -78,7 +68,7 @@ void CommandParser::ParseParams(std::string &request,
 {
 	size_t	pos;
 
-	Trim(request);
+	Tool::Trim(request);
 	while (!request.empty() && params.size() < MAX_PARAMS)
 	{
 		if (request[0] == ':')
@@ -91,7 +81,7 @@ void CommandParser::ParseParams(std::string &request,
 		{
 			params.push_back(request.substr(0, pos));
 			request = request.substr(pos + 1);
-			Trim(request);
+			Tool::Trim(request);
 		}
 		else
 		{
@@ -101,7 +91,7 @@ void CommandParser::ParseParams(std::string &request,
 	}
 }
 
-void	CommandParser::ProcessCommand(Client *client, std::string &request)
+void CommandParser::ProcessCommand(Client *client, std::string &request)
 {
 	std::string prefix("");
 	std::string command("");
@@ -133,5 +123,3 @@ void	CommandParser::ProcessCommand(Client *client, std::string &request)
 		return ;
 	commands_[command]->Execute(client, params);
 }
-
-

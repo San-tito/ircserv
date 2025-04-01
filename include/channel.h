@@ -14,8 +14,8 @@
 # define CHANNEL_H
 # include "channelmanager.h"
 # include "client.h"
-# include "typedefs.h"
 # include "messages.h"
+# include "typedefs.h"
 # include <cstddef>
 # include <map>
 # include <set>
@@ -48,7 +48,7 @@ class Channel
 	std::string name(void) const;
 	std::string topic(void) const;
 	std::string key(void) const;
-	void	set_topic(std::string topic);
+	void set_topic(std::string topic);
 
   private:
 	std::string name_;
