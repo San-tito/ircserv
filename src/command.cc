@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 13:03:22 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/01 18:37:18 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,16 +330,12 @@ Mode::Mode(void) : Command("MODE", 1, -1, true)
 void Mode::Execute(Client *client, const std::vector<std::string> &params)
 {
 	Channel *chan(0);
-	bool is_valid_nick(Server::instance->clients().IsValidNick(params[0]));
 	bool is_valid_chan(Server::instance->channels().IsValidName(params[0]));
 	if (is_valid_chan)
 		chan = Server::instance->channels().Search(params[0]);
 	if (chan)
 		return (Server::instance->channels().Mode(client, params));
-	if (is_valid_nick)
-		client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), params[0]));
-	else
-		client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), params[0]));
+	client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), params[0]));
 }
 
 Topic::Topic(void) : Command("TOPIC", 1, 2, true)
