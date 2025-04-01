@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:46:32 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 18:27:18 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,7 @@ void ClientManager::CheckTimeouts(void)
 		Client *client(it->second);
 		++it;
 		if (!client->registered() && client->last_activity() < now - TIMEOUT)
-		{
-			Log() << "Unregistered connection " << client->socket() << " timed out";
 			CloseClient(client->socket(), "timed out");
-		}
 	}
 }
 
