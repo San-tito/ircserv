@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 15:33:01 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/26 21:30:01 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 11:35:52 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ class CommandParser
 	CommandParser(void);
 	~CommandParser(void);
 
-	void Trim(std::string &str);
 	bool ParseCommand(std::string &request, std::string &prefix,
 		std::string &command);
 	void ParseParams(std::string &request, std::vector<std::string> &params);

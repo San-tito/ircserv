@@ -6,15 +6,15 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 17:33:59 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/01 11:35:04 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BOT_H
 # define BOT_H
 
-# include "connection.h"
 # include "logging.h"
+# include "tool.h"
 # include <algorithm>
 # include <cfloat>
 # include <climits>

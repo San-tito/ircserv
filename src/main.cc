@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:20:19 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 19:33:22 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/01 11:34:48 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 		std::cerr << "Usage: " << argv[0] << " <port> <password>\n";
 		return (EXIT_FAILURE);
 	}
-	port = Connection::ParsePort(argv[1]);
+	port = Tool::ParsePort(argv[1]);
 	if (port < 0)
 	{
 		std::cerr << "illegal port number " << argv[1] << "!\n";

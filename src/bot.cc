@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 19:33:39 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/01 11:35:30 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void Bot::InitConnection(int port, std::string &host)
 	struct hostent *h(gethostbyname(host.c_str()));
 	if (h)
 		listen_addr = h->h_name;
-	if (!Connection::InitAddress(&this->address_, port, listen_addr.c_str()))
+	if (!Tool::InitAddress(&this->address_, port, listen_addr.c_str()))
 	{
 		Log() << "Can't connect on [" << listen_addr << "]:" << port << ": Failed to parse IP address!";
 		Exit(EXIT_FAILURE);
@@ -139,7 +139,7 @@ int	main(int argc, char **argv)
 		std::cerr << "Usage: " << argv[0] << " <host> <port> <password>\n";
 		return (EXIT_FAILURE);
 	}
-	port = Connection::ParsePort(argv[2]);
+	port = Tool::ParsePort(argv[2]);
 	if (port < 0)
 	{
 		std::cerr << "illegal port number " << argv[2] << "!\n";
