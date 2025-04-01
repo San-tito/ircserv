@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 20:08:37 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/01 20:22:10 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void Bot::Read(void)
 	}
 	buf[len] = '\0';
 	std::string msg(buf);
-	ParseInstruction(msg);
+	Parser(msg);
 }
 
 void Bot::Write(std::string const &msg)
@@ -120,7 +120,17 @@ void Bot::SetSignals(void)
 	signal(SIGQUIT, Bot::SignalHandler);
 }
 
-void Bot::SignalHandler(int sig) { Log() << "Received signal: \"" << strsignal(sig) << '\"'; switch (sig) { case SIGINT: case SIGTERM: case SIGQUIT: Bot::instance->Exit(EXIT_SUCCESS); break ; }
+void Bot::SignalHandler(int sig)
+{
+	Log() << "Received signal: \"" << strsignal(sig) << '\"';
+	switch (sig)
+	{
+	case SIGINT:
+	case SIGTERM:
+	case SIGQUIT:
+		Bot::instance->Exit(EXIT_SUCCESS);
+		break ;
+	}
 }
 
 void Bot::Trim(std::string &str)
@@ -133,12 +143,11 @@ void Bot::Trim(std::string &str)
 		str = str.substr(start, end - start + 1);
 }
 
-std::vector<std::string>	Bot::userList(std::string users)
+std::vector<std::string> Bot::userList(std::string users)
 {
-	std::vector<std::string>	users_;
-
 	size_t	pos;
 
+	std::vector<std::string> users_;
 	Trim(users);
 	while (!users.empty())
 	{
@@ -157,25 +166,26 @@ std::vector<std::string>	Bot::userList(std::string users)
 	return (users_);
 }
 
-void Bot::ParseInstruction(std::string& request)
+void Bot::ParseInstruction(std::string &request)
 {
-	std::string     action;
-	std::string     users;
-	std::string     msg;
+	size_t	pos;
 
+	std::string action;
+	std::string users;
+	std::string msg;
+	pos = request.find(' ');
 	Trim(request);
-	size_t  pos = request.find(' ');
 	if (pos != std::string::npos)
 	{
-			action = request.substr(0, pos);
-			request = request.substr(pos + 1);
+		action = request.substr(0, pos);
+		request = request.substr(pos + 1);
 	}
 	Trim(request);
 	pos = request.find(' ');
 	if (pos != std::string::npos)
 	{
-			users = request.substr(0, pos);
-			request = request.substr(pos + 1);
+		users = request.substr(0, pos);
+		request = request.substr(pos + 1);
 	}
 	Trim(request);
 	msg = request;
@@ -185,104 +195,105 @@ void Bot::ParseInstruction(std::string& request)
 	/*TODO*/
 }
 
+// tuta!asdf@unknown PRIVMSG tuta2 :!msg user1,user2,user3 :message
+
 void Bot::ParseParams(std::string &request, std::vector<std::string> &params)
 {
-	size_t  pos;
+	size_t	pos;
 
 	Trim(request);
 	while (!request.empty())
 	{
-			if (request[0] == ':')
-			{
-					params.push_back(request.substr(1));
-					break ;
-			}
-			pos = request.find(' ');
-			if (pos != std::string::npos)
-			{
-					params.push_back(request.substr(0, pos));
-					request = request.substr(pos + 1);
-					Trim(request);
-			}
-			else
-			{
-					params.push_back(request);
-					break ;
-			}
+		if (request[0] == ':')
+		{
+			params.push_back(request.substr(1));
+			break ;
+		}
+		pos = request.find(' ');
+		if (pos != std::string::npos)
+		{
+			params.push_back(request.substr(0, pos));
+			request = request.substr(pos + 1);
+			Trim(request);
+		}
+		else
+		{
+			params.push_back(request);
+			break ;
+		}
 	}
 }
 
-bool    Bot::ParseCmd(std::string& request, std::string& command)
+bool Bot::ParseCmd(std::string &request, std::string &command)
 {
-        size_t  pos;
-
-        Trim(request);
-        pos = request.find(' ');
-        if (request[0] == ':')
-        {
-                if (pos == std::string::npos)
-                        return (false);
-                request = request.substr(pos + 1);
-        }
-        pos = request.find(' ');
-        if (pos != std::string::npos)
-        {
-                command = request.substr(0, pos);
-                request = request.substr(pos + 1);
-        }
-        else
-        {
-                command = request;
-                request.clear();
-        }
-        return (true);
-}
-
-void    Bot::Parser(std::string request)
-{
-        std::string     command("");
-        std::vector<std::string> params;
-
-        if (!ParseCmd(request, command))
-        {
-                std::cerr << "ERROR :Prefix without command.";
-                return ;
-        }
-        ParseParams(request, params);
-        if (params.size() > MAX_PARAMS)
-        {
-                std::cerr << "ERROR : Too much params.";
-                return ;
-        }
-        std::cout << "COMMAND: " << command << std::endl;
-        std::cout << "USERS: " << params[0] << std::endl;
-        std::cout << "BOT MSG: " << params[1] << std::endl;
-        ParseAction(params[1]);
-}
-
-void	Bot::ParseAction(std::string& request)
-{
-	std::string     action;
-	std::string     users;
-	std::string     msg;
+	size_t	pos;
 
 	Trim(request);
-	size_t  pos = request.find(' ');
+	pos = request.find(' ');
+	if (request[0] == ':')
+	{
+		if (pos == std::string::npos)
+			return (false);
+		request = request.substr(pos + 1);
+	}
+	pos = request.find(' ');
 	if (pos != std::string::npos)
 	{
-			action = request.substr(0, pos);
-			request = request.substr(pos + 1);
+		command = request.substr(0, pos);
+		request = request.substr(pos + 1);
+	}
+	else
+	{
+		command = request;
+		request.clear();
+	}
+	return (true);
+}
+
+void Bot::Parser(std::string request)
+{
+	std::string command("");
+	std::vector<std::string> params;
+	if (!ParseCmd(request, command))
+	{
+		std::cerr << "ERROR :Prefix without command.";
+		return ;
+	}
+	ParseParams(request, params);
+	if (params.size() > MAX_PARAMS)
+	{
+		std::cerr << "ERROR : Too much params.";
+		return ;
+	}
+	std::cout << "COMMAND: " << command << std::endl;
+	std::cout << "USERS: " << params[0] << std::endl;
+	std::cout << "BOT MSG: " << params[1] << std::endl;
+	ParseAction(params[1]);
+}
+
+void Bot::ParseAction(std::string &request)
+{
+	size_t	pos;
+
+	std::string action;
+	std::string users;
+	std::string msg;
+	Trim(request);
+	pos = request.find(' ');
+	if (pos != std::string::npos)
+	{
+		action = request.substr(0, pos);
+		request = request.substr(pos + 1);
 	}
 	Trim(request);
 	pos = request.find(' ');
 	if (pos != std::string::npos)
 	{
-			users = request.substr(0, pos);
-			request = request.substr(pos + 1);
+		users = request.substr(0, pos);
+		request = request.substr(pos + 1);
 	}
 	Trim(request);
 	msg = request;
-
 	std::cout << "ACTION = " << action << std::endl;
 	std::cout << "USERS = " << users << std::endl;
 	std::cout << "MSG= " << msg << std::endl;
@@ -290,32 +301,32 @@ void	Bot::ParseAction(std::string& request)
 	executeAction(action, userList(users), msg);
 }
 
-
-void Bot::executeAction(std::string &action, std::vector<std::string> users, std::string &msg)
+void Bot::executeAction(std::string &action, std::vector<std::string> users,
+	std::string &msg)
 {
+		char uname[1024];
+	FILE	*fp;
+	int		status;
+
 	std::string final_message;
-
-
 	if (action == "!msg")
-	  final_message = msg;
-
-	if (action == "!joke") {
-	  std::string command = "curl --silent -H \"Accept: text/plain\" https://icanhazdadjoke.com/";
-	  char uname[1024];
-	  FILE* fp = popen(command.c_str(), "r");
-	  if (!fp)
-		std::cout << "Failed to run command." << std::endl;
-
-	  std::stringstream joke;
-	  if (fgets(uname, sizeof(uname), fp) != 0)
-		joke << uname << std::endl;
-
-	  int status = pclose(fp);
-	  if (status == -1) {
-		perror("pclose");
-	  }
+		final_message = msg;
+	if (action == "!joke")
+	{
+		std::string command = "curl --silent -H \"Accept: text/plain\" https://icanhazdadjoke.com/";
+		fp = popen(command.c_str(), "r");
+		if (!fp)
+			std::cout << "Failed to run command." << std::endl;
+		std::stringstream joke;
+		if (fgets(uname, sizeof(uname), fp) != 0)
+			joke << uname << std::endl;
+		status = pclose(fp);
+		if (status == -1)
+		{
+			perror("pclose");
+		}
+		final_message = joke.str();
 	}
-
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
 		Write("PRIVMSG " + *it + " :" + final_message);
 }
