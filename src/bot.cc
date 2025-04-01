@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/31 22:11:45 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 13:17:04 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ std::vector<std::string>	Bot::userList(std::string users)
 	return (users_);
 }
 
-void Bot::parseInstruction(std::string& request)
+void Bot::ParseInstruction(std::string& request)
 {
 	std::string	action;
 	std::string	users;
@@ -192,6 +192,17 @@ void Bot::parseInstruction(std::string& request)
 	/*TODO*/
 }
 
+void	Bot::ProcessRequest(std::string& request)
+{
+	std::string	command;
+	std::string	users;
+
+	if (ParseCmd(request, command))
+	{
+		this->Write("ERROR: Prefix without command.");
+		return ;
+	}
+}
 
 int	main(int argc, char **argv)
 {
