@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 21:29:02 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 22:02:56 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ class Bot
 	void SetSignals(void);
 	void InitConnection(int port, std::string &listen_addr);
 	void Authenticate(std::string password);
-	std::string Read(void);
+	void Read(void);
 	void Write(std::string const &msg);
 
 	/*Parsing*/
@@ -62,8 +62,7 @@ class Bot
 	bool ParseCmd(std::string &request, std::string &command);
 	void ParseAction(std::string &request);
 	void ParseParams(std::string &request, std::vector<std::string> &params);
-	void ParserAux(std::string &req, std::string &cmd,
-		std::vector<std::string> &params);
+	void ParserAux(std::string &req, std::string &cmd, std::vector<std::string> &params);
 	void SaveUsers(std::vector<std::string> &users, std::string &ustr);
 	std::vector<std::string> userList(std::string users);
 
