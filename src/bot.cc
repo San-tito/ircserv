@@ -6,11 +6,12 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 19:45:13 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 20:08:37 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bot.h"
+#include <stdio.h>
 
 Bot *Bot::instance(0);
 
@@ -156,27 +157,6 @@ std::vector<std::string>	Bot::userList(std::string users)
 	return (users_);
 }
 
-void Bot::executeAction(std::string &action, std::vector<std::string> users, std::string &msg)
-{
-	if (action == "!msg")
-	{
-	  for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
-		Write("PRIVMSG " + *it + " :" + msg);
-	}
-	else if (action == "!laugh") 
-	{
-	  for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it) {
-
-		std::string command = "curl -H \"Accept: text/plain\" https://icanhazdadjoke.com/";
-		std::ostringstream joke;
-
-		joke << system(command.c_str()) << '\n';
-
-		Write("PRIVMSG " + *it + " :" + joke.str());
-	  }
-	}
-}
-
 void Bot::ParseInstruction(std::string& request)
 {
 	std::string     action;
@@ -307,6 +287,37 @@ void	Bot::ParseAction(std::string& request)
 	std::cout << "USERS = " << users << std::endl;
 	std::cout << "MSG= " << msg << std::endl;
 	/*TODO*/
+	executeAction(action, userList(users), msg);
+}
+
+
+void Bot::executeAction(std::string &action, std::vector<std::string> users, std::string &msg)
+{
+	std::string final_message;
+
+
+	if (action == "!msg")
+	  final_message = msg;
+
+	if (action == "!joke") {
+	  std::string command = "curl --silent -H \"Accept: text/plain\" https://icanhazdadjoke.com/";
+	  char uname[1024];
+	  FILE* fp = popen(command.c_str(), "r");
+	  if (!fp)
+		std::cout << "Failed to run command." << std::endl;
+
+	  std::stringstream joke;
+	  if (fgets(uname, sizeof(uname), fp) != 0)
+		joke << uname << std::endl;
+
+	  int status = pclose(fp);
+	  if (status == -1) {
+		perror("pclose");
+	  }
+	}
+
+	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
+		Write("PRIVMSG " + *it + " :" + final_message);
 }
 
 int	main(int argc, char **argv)
