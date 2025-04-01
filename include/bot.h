@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/31 18:12:08 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 12:07:50 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,17 @@ class Bot
 
 	/*Parsing*/
 	// PRIVMSG bot "/bot user1 :message"
-	void	Trim(std::string &str);
-	void	parseInstruction(std::string& request);
-	std::vector<std::string>	Bot::userList(std::string users);
-	void	SaveUsers(std::vector<std::string>& users, std::string& ustr);
+	void Trim(std::string &str);
+	void parseInstruction(std::string &request);
+	std::vector<std::string> userList(std::string users);
+	void SaveUsers(std::vector<std::string> &users, std::string &ustr);
+
+	/*Actions*/
+	void executeAction(std::string &action, std::vector<std::string> users,
+		std::string &msg);
 
 	int sock_;
-	struct sockaddr_in address_;	
+	struct sockaddr_in address_;
 };
 
 #endif /* BOT_H */

@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/31 22:11:45 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:57:40 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void Bot::Read(void)
 		Exit(EXIT_FAILURE);
 	}
 	buf[len] = '\0';
+	std::string msg(buf);
+	parseInstruction(msg);
 }
 
 void Bot::Write(std::string const &msg)
@@ -164,6 +166,27 @@ std::vector<std::string>	Bot::userList(std::string users)
 	return (users_);
 }
 
+void Bot::executeAction(std::string &action, std::vector<std::string> users, std::string &msg)
+{
+	if (action == "!msg")
+	{
+	  for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
+		Write("PRIVMSG " + *it + " :" + msg);
+	}
+	else if (action == "!laugh") 
+	{
+	  for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it) {
+
+		std::string command = "curl -H \"Accept: text/plain\" https://icanhazdadjoke.com/";
+		std::ostringstream joke;
+
+		joke << system(command.c_str()) << '\n';
+
+		Write("PRIVMSG " + *it + " :" + joke.str());
+	  }
+	}
+}
+
 void Bot::parseInstruction(std::string& request)
 {
 	std::string	action;
@@ -186,12 +209,17 @@ void Bot::parseInstruction(std::string& request)
 	}
 	Trim(request);
 	msg = request;
-	std::cout << "ACTION = " << action << std::endl;
-	std::cout << "USERS = " << users << std::endl;
-	std::cout << "MSG= " << msg << std::endl;
+	//std::cout << "ACTION = " << action << std::endl;
+	//std::cout << "USERS = " << users << std::endl;
+	//std::cout << "MSG= " << msg << std::endl;
 	/*TODO*/
-}
 
+	action = "!msg";
+	users = "tuta,tuta2";
+	std::vector<std::string> usersList = userList(users);
+	msg = "me dijo un pajarito que sos re trolo";
+	executeAction(action, usersList, msg);
+}
 
 int	main(int argc, char **argv)
 {
