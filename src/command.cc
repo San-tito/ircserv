@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 18:37:18 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/01 18:41:08 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,7 +311,7 @@ void Kick::Execute(Client *client, const std::vector<std::string> &params)
 		client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(), name_));
 }
 
-Quit::Quit(void) : Command("QUIT", 0, 1, true)
+Quit::Quit(void) : Command("QUIT", 0, 1, false)
 {
 }
 
