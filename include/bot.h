@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 19:42:39 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/01 21:29:02 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <climits>
 # include <csignal>
 # include <cstdarg>
+# include <cstddef>
 # include <cstring>
 # include <iostream>
 # include <map>
@@ -28,13 +29,13 @@
 # include <sstream>
 # include <string>
 # include <vector>
-# include <iostream>
-#include <cstddef>
 
 # define READBUFFER_LEN 2048
 # define NICKNAME std::string("whisper")
 # define USERNAME std::string("whisper")
 # define MAX_PARAMS 2
+# define PARAMS_LAUGH 2
+# define PARAMS_MSG 1
 
 class Bot
 {
@@ -52,22 +53,20 @@ class Bot
 	void SetSignals(void);
 	void InitConnection(int port, std::string &listen_addr);
 	void Authenticate(std::string password);
-	void Read(void);
+	std::string Read(void);
 	void Write(std::string const &msg);
 
 	/*Parsing*/
-	// PRIVMSG bot "/bot user1 :message"
-	void	Trim(std::string &str);
-	void	ProcessRequest(std::string& request);
-	void	Parser(std::string request);
-	bool	ParseCmd(std::string &request, std::string &command);
-	void	ParseAction(std::string& request);
-	void	ParseParams(std::string &request, std::vector<std::string> &params);
-	void	ParseInstruction(std::string& request);
-	void	ParserAux(std::string& req, std::string& cmd, std::vector<std::string>& params);
-	void	SaveUsers(std::vector<std::string>& users, std::string& ustr);
-	std::vector<std::string>	userList(std::string users);
-	
+	void ProcessRequest(std::string &request);
+	void Parser(std::string request);
+	bool ParseCmd(std::string &request, std::string &command);
+	void ParseAction(std::string &request);
+	void ParseParams(std::string &request, std::vector<std::string> &params);
+	void ParserAux(std::string &req, std::string &cmd,
+		std::vector<std::string> &params);
+	void SaveUsers(std::vector<std::string> &users, std::string &ustr);
+	std::vector<std::string> userList(std::string users);
+
 	/*Actions*/
 	void executeAction(std::string &action, std::vector<std::string> users,
 		std::string &msg);

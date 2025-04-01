@@ -14,15 +14,15 @@
 
 class BotParser
 {
-public:
+  public:
 	BotParser(void);
 	~BotParser(void);
 
-	void	Trim(std::string &str);
-	bool	ParseCommand(std::string &);
-	void	ParseParams(std::string &request, std::vector<std::string> &params);
-	void	ProcessCommand(Client *client, std::string &request);
+	void Trim(std::string &str);
+	bool ParseCommand(std::string &);
+	void ParseParams(std::string &request, std::vector<std::string> &params);
+	void ProcessCommand(Client *client, std::string &request);
 
-private:
+  private:
 	std::map<std::string, Command *> commands_;
 };

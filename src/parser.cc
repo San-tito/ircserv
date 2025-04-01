@@ -93,10 +93,9 @@ void CommandParser::ParseParams(std::string &request,
 
 void CommandParser::ProcessCommand(Client *client, std::string &request)
 {
-	std::string	prefix("");
-	std::string	command("");
+	std::string prefix("");
+	std::string command("");
 	std::vector<std::string> params;
-
 	if (!ParseCommand(request, prefix, command))
 	{
 		client->Write("ERROR :Prefix without command.");
