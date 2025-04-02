@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/02 19:47:22 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/02 20:01:28 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,8 @@ void Bot::Parser(std::string request)
 	std::cout << "BOT MSG: " << params[1] << std::endl;
 	ParseAction(params[1]);
 }
+
+/*
 void Bot::ParseAction(std::string &request)
 {
 	std::string	action;
@@ -240,7 +242,12 @@ void Bot::ParseAction(std::string &request)
 		return ;
 	}
 	ParseParams(request, params);
-	if (params.size() != PARAMS_MSG)
+	if (params.size() != PARAMS_MSG && action == "!msg")
+	{
+		this->Write("USAGE: !msg <users>/<user1,user2,...> <message>/:<mesage>");
+		return ;
+	}
+	else if (params.size() != PARAMS_LAUGH && action == "!laugh")
 	{
 		this->Write("USAGE: !msg <users>/<user1,user2,...> <message>/:<mesage>");
 		return ;
@@ -253,10 +260,10 @@ void Bot::ParseAction(std::string &request)
 	std::cout << "ACTION = " << action << std::endl;
 	std::cout << "USERS = " << params[0] << std::endl;
 	std::cout << "MSG= " << params[1] << std::endl;
-	/*TODO*/
+	
 	executeAction(action, userList(params[0]), params[1]);
-}
-/*
+}*/
+
 void Bot::ParseAction(std::string &request)
 {
 	size_t	pos;
@@ -285,36 +292,15 @@ void Bot::ParseAction(std::string &request)
 	std::cout << "USERS = " << users << std::endl;
 	std::cout << "MSG= " << msg << std::endl;
 	executeAction(action, userList(users), msg);
-}*/
+}
 
 void Bot::executeAction(std::string &action, std::vector<std::string> users,
 	std::string &msg)
 {
-		char uname[1024];
-	FILE	*fp;
-	int		status;
-
-	std::string final_message;
-	if (action == "!msg")
-		final_message = msg;
 	if (action == "!joke")
-	{
-		std::string command = "curl --silent -H \"Accept: text/plain\" https://icanhazdadjoke.com/";
-		fp = popen(command.c_str(), "r");
-		if (!fp)
-			std::cout << "Failed to run command." << std::endl;
-		std::stringstream joke;
-		if (fgets(uname, sizeof(uname), fp) != 0)
-			joke << uname << std::endl;
-		status = pclose(fp);
-		if (status == -1)
-		{
-			perror("pclose");
-		}
-		final_message = joke.str();
-	}
+	  msg = Jokes::getRandomJoke();
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
-		Write("PRIVMSG " + *it + " :" + final_message);
+		Write("PRIVMSG " + *it + " :" + msg);
 }
 
 int	main(int argc, char **argv)
@@ -332,6 +318,7 @@ int	main(int argc, char **argv)
 		std::cerr << "illegal port number " << argv[2] << "!\n";
 		return (EXIT_FAILURE);
 	}
+	std::srand(std::time(0));
 	new Bot(argv[1], port, argv[3]);
 	Bot::instance->Run();
 	return (EXIT_SUCCESS);
