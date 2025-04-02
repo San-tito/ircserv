@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 21:54:36 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/02 19:35:19 by tuta             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,31 +264,10 @@ void Bot::ParseAction(std::string &request)
 void Bot::executeAction(std::string &action, std::vector<std::string> users,
 	std::string &msg)
 {
-		char uname[1024];
-	FILE	*fp;
-	int		status;
-
-	std::string final_message;
-	if (action == "!msg")
-		final_message = msg;
 	if (action == "!joke")
-	{
-		std::string command = "curl --silent -H \"Accept: text/plain\" https://icanhazdadjoke.com/";
-		fp = popen(command.c_str(), "r");
-		if (!fp)
-			std::cout << "Failed to run command." << std::endl;
-		std::stringstream joke;
-		if (fgets(uname, sizeof(uname), fp) != 0)
-			joke << uname << std::endl;
-		status = pclose(fp);
-		if (status == -1)
-		{
-			perror("pclose");
-		}
-		final_message = joke.str();
-	}
+	  msg = Jokes::getRandomJoke();
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
-		Write("PRIVMSG " + *it + " :" + final_message);
+		Write("PRIVMSG " + *it + " :" + msg);
 }
 
 int	main(int argc, char **argv)
@@ -306,6 +285,7 @@ int	main(int argc, char **argv)
 		std::cerr << "illegal port number " << argv[2] << "!\n";
 		return (EXIT_FAILURE);
 	}
+	std::srand(std::time(0));
 	new Bot(argv[1], port, argv[3]);
 	Bot::instance->Run();
 	return (EXIT_SUCCESS);
