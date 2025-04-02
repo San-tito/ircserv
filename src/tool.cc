@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:08:49 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 11:36:26 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/03 01:20:17 by tuta             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,12 @@ bool Tool::InitSocket(int socket)
 			sizeof(value)) != 0)
 		Log() << "Can't set SO_REUSEADDR for new socket: " << strerror(errno) << '!';
 	return (true);
+}
+
+std::string Tool::ToUpperCase(const std::string &str) {
+    std::string result = str;
+    for (size_t i = 0; i < result.length(); ++i) {
+        result[i] = std::toupper(result[i]);
+    }
+    return result;
 }

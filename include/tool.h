@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 11:33:53 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/03 01:20:08 by tuta             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Tool
 	static bool InitSocket(int socket);
 	static bool InitAddress(struct sockaddr_in *addr, int port,
 		const char *listen_addr);
+	static std::string ToUpperCase(const std::string &str);
 };
 
 #endif /* CONNECTION_H */

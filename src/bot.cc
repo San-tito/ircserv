@@ -6,12 +6,11 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/02 20:01:28 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/03 01:27:52 by tuta             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bot.h"
-#include <stdio.h>
 
 Bot *Bot::instance(0);
 
@@ -68,7 +67,7 @@ void Bot::Read(void)
 	ssize_t	len;
 	char	buf[READBUFFER_LEN];
 
-	len = recv(this->sock_, buf, READBUFFER_LEN, MSG_WAITALL);
+	len = recv(this->sock_, buf, READBUFFER_LEN, MSG_WAITFORONE);
 	if (len == 0)
 	{
 		Log() << "Server close connection";
@@ -213,94 +212,93 @@ void Bot::Parser(std::string request)
 {
 	std::string command;
 	std::vector<std::string> params;
+	std::string raw_request = request;
+
 	if (!ParseCmd(request, command))
-	{
-		this->Write("ERROR :Prefix without command.");
-		return ;
-	}
+		return (this->Write("ERROR :Prefix without command."));
 	ParseParams(request, params);
 	if (params.size() > MAX_PARAMS)
-	{
-		this->Write("ERROR : Too much params.");
-		return ;
-	}
-	std::cout << "COMMAND: " << command << std::endl;
-	std::cout << "USERS: " << params[0] << std::endl;
-	std::cout << "BOT MSG: " << params[1] << std::endl;
-	ParseAction(params[1]);
+		return (Write("ERROR : Too many params."));
+	ParseAction(params[1], raw_request);
 }
 
-/*
-void Bot::ParseAction(std::string &request)
+void Bot::ParseAction(std::string &request, std::string &raw_request)
 {
 	std::string	action;
 	std::vector<std::string>	params;
+	std::string nickname = raw_request.substr(1, raw_request.find('!') - 1);
+	std::vector<std::string> users;
+	std::string message = "";
 	
 	if (!ParseCmd(request, action))
-	{
-		this->Write("ERROR :Prefix without command.");
-		return ;
-	}
+		return (Write("ERROR :Prefix without command."));
 	ParseParams(request, params);
-	if (params.size() != PARAMS_MSG && action == "!msg")
-	{
-		this->Write("USAGE: !msg <users>/<user1,user2,...> <message>/:<mesage>");
-		return ;
-	}
-	else if (params.size() != PARAMS_LAUGH && action == "!laugh")
-	{
-		this->Write("USAGE: !msg <users>/<user1,user2,...> <message>/:<mesage>");
-		return ;
-	}
-	else
-	{
-		this->Write("ERROR: Bad params.");
-		return ;
-	}
-	std::cout << "ACTION = " << action << std::endl;
-	std::cout << "USERS = " << params[0] << std::endl;
-	std::cout << "MSG= " << params[1] << std::endl;
-	
-	executeAction(action, userList(params[0]), params[1]);
-}*/
-
-void Bot::ParseAction(std::string &request)
-{
-	size_t	pos;
-
-	std::string action;
-	std::string users;
-	std::string msg;
-	
-	Tool::Trim(request);
-	pos = request.find(' ');
-	if (pos != std::string::npos)
-	{
-		action = request.substr(0, pos);
-		request = request.substr(pos + 1);
-	}
-	Tool::Trim(request);
-	pos = request.find(' ');
-	if (pos != std::string::npos)
-	{
-		users = request.substr(0, pos);
-		request = request.substr(pos + 1);
-	}
-	Tool::Trim(request);
-	msg = request;
-	std::cout << "ACTION = " << action << std::endl;
-	std::cout << "USERS = " << users << std::endl;
-	std::cout << "MSG= " << msg << std::endl;
-	executeAction(action, userList(users), msg);
+	if (((params.size() <= PARAMS_MSG) || params.empty()) && action == "!msg")
+		return (Write("PRIVMSG " + nickname + " : USAGE: !msg <users>/<user1,user2,...> <message>/:<message>"));
+	else if ((params.size() >= PARAMS_LAUGH) && action == "!joke")
+		return (Write("PRIVMSG " + nickname + " : USAGE: !joke <users>/<user1,user2,...>\n USAGE: !joke"));
+	if (action == "!msg")
+		message = params[1];
+	if (params.empty())
+	  users.push_back(nickname);
+	else 
+	  users = userList(params[0]);
+	executeAction(action, users, message, nickname);
 }
 
-void Bot::executeAction(std::string &action, std::vector<std::string> users,
-	std::string &msg)
+/* void Bot::ParseAction(std::string &request) */
+/* { */
+/* 	size_t	pos; */
+/**/
+/* 	std::string action; */
+/* 	std::string users; */
+/* 	std::string msg; */
+/**/
+/* 	Tool::Trim(request); */
+/* 	pos = request.find(' '); */
+/* 	if (pos != std::string::npos) */
+/* 	{ */
+/* 		action = request.substr(0, pos); */
+/* 		request = request.substr(pos + 1); */
+/* 	} */
+/* 	Tool::Trim(request); */
+/* 	pos = request.find(' '); */
+/* 	if (pos != std::string::npos) */
+/* 	{ */
+/* 		users = request.substr(0, pos); */
+/* 		request = request.substr(pos + 1); */
+/* 	} */
+/* 	Tool::Trim(request); */
+/* 	msg = request; */
+/* 	std::cout << "ACTION = " << action << std::endl; */
+/* 	std::cout << "USERS = " << users << std::endl; */
+/* 	std::cout << "MSG= " << msg << std::endl; */
+/* 	executeAction(action, userList(users), msg); */
+/* } */
+
+void Bot::executeAction(std::string &action, std::vector<std::string> &users,
+	std::string &msg, std::string &sender)
 {
 	if (action == "!joke")
 	  msg = Jokes::getRandomJoke();
+	else if (action == "!help")
+	{
+		Write("PRIVMSG " + sender + " :!msg <users> :<message> - Send an anonymous message a user or a list of users");
+		Write("PRIVMSG " + sender + " :!joke - Get a random joke");
+		Write("PRIVMSG " + sender + " :!joke <users> :<message> - Send a joke to a user or a list of users");
+		Write("PRIVMSG " + sender + " :!help - Display this help message");
+		return ;
+	}
+	else if (action == "!msg")
+		msg += " - anonymous";
+	else
+	  return ;
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
-		Write("PRIVMSG " + *it + " :" + msg);
+	{
+	  Write("PRIVMSG " + *it + " :" + msg);
+	  if (*it != sender)
+		Write("PRIVMSG " + sender + " :" + Tool::ToUpperCase(action.substr(1, action.size())) + " sent to " + *it);
+	}
 }
 
 int	main(int argc, char **argv)

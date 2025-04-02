@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/02 19:20:27 by tuta             ###   ########.fr       */
+/*   Updated: 2025/04/03 01:02:36 by tuta             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,15 @@ class Bot
 	void ProcessRequest(std::string &request);
 	void Parser(std::string request);
 	bool ParseCmd(std::string &request, std::string &command);
-	void ParseAction(std::string &request);
+	void ParseAction(std::string &request, std::string &request2);
 	void ParseParams(std::string &request, std::vector<std::string> &params);
 	void ParserAux(std::string &req, std::string &cmd, std::vector<std::string> &params);
 	void SaveUsers(std::vector<std::string> &users, std::string &ustr);
 	std::vector<std::string> userList(std::string users);
 
 	/*Actions*/
-	void executeAction(std::string &action, std::vector<std::string> users,
-		std::string &msg);
+	void executeAction(std::string &action, std::vector<std::string> &users,
+		std::string &msg, std::string &sender);
 
 	int sock_;
 	struct sockaddr_in address_;
