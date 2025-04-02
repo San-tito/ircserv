@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 21:54:36 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/02 19:47:22 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,12 +211,11 @@ bool Bot::ParseCmd(std::string &request, std::string &command)
 
 void Bot::Parser(std::string request)
 {
-	std::string command("");
+	std::string command;
 	std::vector<std::string> params;
 	if (!ParseCmd(request, command))
 	{
 		this->Write("ERROR :Prefix without command.");
-
 		return ;
 	}
 	ParseParams(request, params);
@@ -230,7 +229,34 @@ void Bot::Parser(std::string request)
 	std::cout << "BOT MSG: " << params[1] << std::endl;
 	ParseAction(params[1]);
 }
-
+void Bot::ParseAction(std::string &request)
+{
+	std::string	action;
+	std::vector<std::string>	params;
+	
+	if (!ParseCmd(request, action))
+	{
+		this->Write("ERROR :Prefix without command.");
+		return ;
+	}
+	ParseParams(request, params);
+	if (params.size() != PARAMS_MSG)
+	{
+		this->Write("USAGE: !msg <users>/<user1,user2,...> <message>/:<mesage>");
+		return ;
+	}
+	else
+	{
+		this->Write("ERROR: Bad params.");
+		return ;
+	}
+	std::cout << "ACTION = " << action << std::endl;
+	std::cout << "USERS = " << params[0] << std::endl;
+	std::cout << "MSG= " << params[1] << std::endl;
+	/*TODO*/
+	executeAction(action, userList(params[0]), params[1]);
+}
+/*
 void Bot::ParseAction(std::string &request)
 {
 	size_t	pos;
@@ -238,6 +264,7 @@ void Bot::ParseAction(std::string &request)
 	std::string action;
 	std::string users;
 	std::string msg;
+	
 	Tool::Trim(request);
 	pos = request.find(' ');
 	if (pos != std::string::npos)
@@ -257,9 +284,8 @@ void Bot::ParseAction(std::string &request)
 	std::cout << "ACTION = " << action << std::endl;
 	std::cout << "USERS = " << users << std::endl;
 	std::cout << "MSG= " << msg << std::endl;
-	/*TODO*/
 	executeAction(action, userList(users), msg);
-}
+}*/
 
 void Bot::executeAction(std::string &action, std::vector<std::string> users,
 	std::string &msg)
