@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 15:46:09 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/03 16:51:49 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,36 +246,6 @@ void Bot::ParseAction(std::string &request, std::string &raw_request)
 	executeAction(action, users, message, nickname);
 }
 
-/* void Bot::ParseAction(std::string &request) */
-/* { */
-/* 	size_t	pos; */
-/**/
-/* 	std::string action; */
-/* 	std::string users; */
-/* 	std::string msg; */
-/**/
-/* 	Tool::Trim(request); */
-/* 	pos = request.find(' '); */
-/* 	if (pos != std::string::npos) */
-/* 	{ */
-/* 		action = request.substr(0, pos); */
-/* 		request = request.substr(pos + 1); */
-/* 	} */
-/* 	Tool::Trim(request); */
-/* 	pos = request.find(' '); */
-/* 	if (pos != std::string::npos) */
-/* 	{ */
-/* 		users = request.substr(0, pos); */
-/* 		request = request.substr(pos + 1); */
-/* 	} */
-/* 	Tool::Trim(request); */
-/* 	msg = request; */
-/* 	std::cout << "ACTION = " << action << std::endl; */
-/* 	std::cout << "USERS = " << users << std::endl; */
-/* 	std::cout << "MSG= " << msg << std::endl; */
-/* 	executeAction(action, userList(users), msg); */
-/* } */
-
 void Bot::executeAction(std::string &action, std::vector<std::string> &users,
 	std::string &msg, std::string &sender)
 {
@@ -291,8 +261,10 @@ void Bot::executeAction(std::string &action, std::vector<std::string> &users,
 	}
 	else if (action == "!msg")
 		msg = "An anonymous user said: \"\037" + msg + "\037\"";
-	else
+	else {
+		Write("PRIVMSG " + sender + " :Command not found. !help for help");
 	  return ;
+	}
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
 	{
 	  if ((*it).find('#') != std::string::npos){
