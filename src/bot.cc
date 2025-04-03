@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 15:17:08 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:46:09 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,18 +290,18 @@ void Bot::executeAction(std::string &action, std::vector<std::string> &users,
 		return ;
 	}
 	else if (action == "!msg")
-		msg = "An anonymous user said: \"" + msg + '\"';
+		msg = "An anonymous user said: \"\037" + msg + "\037\"";
 	else
 	  return ;
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
 	{
 	  if ((*it).find('#') != std::string::npos){
-		Write("PRIVMSG " + sender + " :I can't send messages to channels :(");
+		Write("PRIVMSG " + sender + " :\0030,04I can't send messages to channels :(");
 		continue ;
 	  }
 	  Write("PRIVMSG " + *it + " :" + msg);
 	  if (*it != sender)
-		Write("PRIVMSG " + sender + " :" + Tool::ToUpperCase(action.substr(1, action.size())) + " sent to " + *it);
+		Write("PRIVMSG " + sender + " :\002" + Tool::ToUpperCase(action.substr(1, action.size())) + " sent to " + *it);
 	}
 }
 
