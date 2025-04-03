@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 15:04:29 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/03 14:54:18 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 		if (op)
 			chan->AddOperator(client);
 		chan->Write(client, name_ + " :" + chan->name());
-		client->Write(name_ + " :" + chan->name());
+		client->Write(client->mask(), name_ + " :" + chan->name());
 		if (params.size() > 1)
 			std::getline(key_ss, key, ',');
 	}
@@ -126,7 +126,7 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 		if (op)
 			chan->AddOperator(client);
 		chan->Write(client, name_ + " :" + chan->name());
-		client->Write(name_ + " :" + chan->name());
+		client->Write(client->mask(),name_ + " :" + chan->name());
 		if (params.size() > 1)
 			std::getline(key_ss, key, ',');
 	}
@@ -181,8 +181,8 @@ void Nick::Execute(Client *client, const std::vector<std::string> &params)
 	else
 	{
 		Log() << "Connection " << client->socket() << ": changed nickname to " << params[0];
-		client->set_nickname(params[0]);
 		client->Write(client->mask(), name_ + " :" + params[0]);
+		client->set_nickname(params[0]);
 	}
 }
 
@@ -240,7 +240,7 @@ void PrivMsg::Execute(Client *client, const std::vector<std::string> &params)
 			dest->Write(client->mask(), name_ + " " + client->nickname() + " :"
 				+ params[1]);
 		else if ((chan = Server::instance->channels().Search(target)))
-			chan->Write(client, name_ + " " + client->nickname() + " :"
+			chan->Write(client, name_ + " " + chan->name() + " :"
 				+ params[1]);
 		else
 			client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), target));

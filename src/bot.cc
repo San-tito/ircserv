@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 13:25:05 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/03 15:17:08 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,8 +233,6 @@ void Bot::ParseAction(std::string &request, std::string &raw_request)
 	if (!ParseCmd(request, action))
 		return (Write("ERROR :Prefix without command."));
 	ParseParams(request, params);
-	for (std::vector<std::string>::iterator it = params.begin(); it != params.end(); ++it)
-		std::cout << "Param: " << *it << std::endl;
 	if ((params.size() != PARAMS_MSG) && action == "!msg")
 		return (Write("PRIVMSG " + nickname + " : USAGE: !msg <users>/<user1,user2,...> <message>/:<message>"));
 	else if ((params.size() > PARAMS_JOKE) && action == "!joke")
@@ -297,6 +295,10 @@ void Bot::executeAction(std::string &action, std::vector<std::string> &users,
 	  return ;
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
 	{
+	  if ((*it).find('#') != std::string::npos){
+		Write("PRIVMSG " + sender + " :I can't send messages to channels :(");
+		continue ;
+	  }
 	  Write("PRIVMSG " + *it + " :" + msg);
 	  if (*it != sender)
 		Write("PRIVMSG " + sender + " :" + Tool::ToUpperCase(action.substr(1, action.size())) + " sent to " + *it);
