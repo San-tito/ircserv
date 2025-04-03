@@ -6,7 +6,7 @@
 #    By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/03/22 20:09:04 by sguzman           #+#    #+#              #
-#    Updated: 2025/04/01 11:33:01 by sguzman          ###   ########.fr        #
+#    Updated: 2025/04/03 10:50:33 by bautrodr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -108,7 +108,7 @@ banner:
 	@printf "%b" "$(YELLOW)Flags:          $(CYAN)$(CFLAGS)\n$(RESET)"
 	@printf "%b" "\n$(RESET)"
 
--include $(DEPS) $(DEPS_MAIN)
+-include $(DEPS) $(DEPS_MAIN) $(DEPS_BOT)
 
 $(NAME): $(OBJS) $(OBJS_MAIN)
 	@$(call compile,$(CC) $(CFLAGS) $^ -o $@)

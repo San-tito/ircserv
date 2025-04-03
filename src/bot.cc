@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 01:27:52 by tuta             ###   ########.fr       */
+/*   Updated: 2025/04/03 13:25:05 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,9 +233,11 @@ void Bot::ParseAction(std::string &request, std::string &raw_request)
 	if (!ParseCmd(request, action))
 		return (Write("ERROR :Prefix without command."));
 	ParseParams(request, params);
-	if (((params.size() <= PARAMS_MSG) || params.empty()) && action == "!msg")
+	for (std::vector<std::string>::iterator it = params.begin(); it != params.end(); ++it)
+		std::cout << "Param: " << *it << std::endl;
+	if ((params.size() != PARAMS_MSG) && action == "!msg")
 		return (Write("PRIVMSG " + nickname + " : USAGE: !msg <users>/<user1,user2,...> <message>/:<message>"));
-	else if ((params.size() >= PARAMS_LAUGH) && action == "!joke")
+	else if ((params.size() > PARAMS_JOKE) && action == "!joke")
 		return (Write("PRIVMSG " + nickname + " : USAGE: !joke <users>/<user1,user2,...>\n USAGE: !joke"));
 	if (action == "!msg")
 		message = params[1];
@@ -283,14 +285,14 @@ void Bot::executeAction(std::string &action, std::vector<std::string> &users,
 	  msg = Jokes::getRandomJoke();
 	else if (action == "!help")
 	{
-		Write("PRIVMSG " + sender + " :!msg <users> :<message> - Send an anonymous message a user or a list of users");
+		Write("PRIVMSG " + sender + " :!msg <users>/<user1,user2,...> :<message> - Send an anonymous message a user or a list of users");
 		Write("PRIVMSG " + sender + " :!joke - Get a random joke");
-		Write("PRIVMSG " + sender + " :!joke <users> :<message> - Send a joke to a user or a list of users");
+		Write("PRIVMSG " + sender + " :!joke <users>/<user1,user2,...> - Send a joke to a user or a list of users");
 		Write("PRIVMSG " + sender + " :!help - Display this help message");
 		return ;
 	}
 	else if (action == "!msg")
-		msg += " - anonymous";
+		msg = "An anonymous user said: \"" + msg + '\"';
 	else
 	  return ;
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)

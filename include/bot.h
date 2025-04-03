@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 01:02:36 by tuta             ###   ########.fr       */
+/*   Updated: 2025/04/03 13:08:22 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@
 # define NICKNAME std::string("whisper")
 # define USERNAME std::string("whisper")
 # define MAX_PARAMS 2
-# define PARAMS_LAUGH 2
-# define PARAMS_MSG 1
+# define PARAMS_MSG 2
+# define PARAMS_JOKE 1
 
 class Bot
 {
