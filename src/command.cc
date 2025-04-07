@@ -126,7 +126,7 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 		if (op)
 			chan->AddOperator(client);
 		chan->Write(client, name_ + " :" + chan->name());
-		client->Write(client->mask(),name_ + " :" + chan->name());
+		client->Write(client->mask(), name_ + " :" + chan->name());
 		if (params.size() > 1)
 			std::getline(key_ss, key, ',');
 	}
@@ -240,8 +240,7 @@ void PrivMsg::Execute(Client *client, const std::vector<std::string> &params)
 			dest->Write(client->mask(), name_ + " " + client->nickname() + " :"
 				+ params[1]);
 		else if ((chan = Server::instance->channels().Search(target)))
-			chan->Write(client, name_ + " " + chan->name() + " :"
-				+ params[1]);
+			chan->Write(client, name_ + " " + chan->name() + " :" + params[1]);
 		else
 			client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), target));
 	}

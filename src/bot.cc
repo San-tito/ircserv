@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 16:51:49 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/07 15:48:11 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,12 @@ void Bot::Authenticate(std::string password)
 	Write("USER " + USERNAME + " 0 * :realname");
 }
 
-void Bot::Read(void)
+std::string Bot::Read(void)
 {
 	ssize_t	len;
 	char	buf[READBUFFER_LEN];
 
-	len = recv(this->sock_, buf, READBUFFER_LEN, MSG_WAITFORONE);
+	len = recv(this->sock_, buf, READBUFFER_LEN, MSG_WAITALL);
 	if (len == 0)
 	{
 		Log() << "Server close connection";
@@ -79,8 +79,7 @@ void Bot::Read(void)
 		Exit(EXIT_FAILURE);
 	}
 	buf[len] = '\0';
-	std::string msg(buf);
-	Parser(msg);
+	return (buf);
 }
 
 void Bot::Write(std::string const &msg)
@@ -100,7 +99,8 @@ void Bot::Run(void)
 {
 	while (true)
 	{
-		Read();
+		std::string buf(Read());
+		Parser(buf);
 	}
 }
 
@@ -213,7 +213,6 @@ void Bot::Parser(std::string request)
 	std::string command;
 	std::vector<std::string> params;
 	std::string raw_request = request;
-
 	if (!ParseCmd(request, command))
 		return (this->Write("ERROR :Prefix without command."));
 	ParseParams(request, params);
@@ -224,25 +223,26 @@ void Bot::Parser(std::string request)
 
 void Bot::ParseAction(std::string &request, std::string &raw_request)
 {
-	std::string	action;
-	std::vector<std::string>	params;
+	std::string action;
+	std::vector<std::string> params;
 	std::string nickname = raw_request.substr(1, raw_request.find('!') - 1);
 	std::vector<std::string> users;
 	std::string message = "";
-	
 	if (!ParseCmd(request, action))
 		return (Write("ERROR :Prefix without command."));
 	ParseParams(request, params);
 	if ((params.size() != PARAMS_MSG) && action == "!msg")
-		return (Write("PRIVMSG " + nickname + " : USAGE: !msg <users>/<user1,user2,...> <message>/:<message>"));
+		return (Write("PRIVMSG " + nickname
+				+ " : USAGE: !msg <users>/<user1,user2,...> <message>/:<message>"));
 	else if ((params.size() > PARAMS_JOKE) && action == "!joke")
-		return (Write("PRIVMSG " + nickname + " : USAGE: !joke <users>/<user1,user2,...>\n USAGE: !joke"));
+		return (Write("PRIVMSG " + nickname
+				+ " : USAGE: !joke <users>/<user1,user2,...>\n USAGE: !joke"));
 	if (action == "!msg")
 		message = params[1];
 	if (params.empty())
-	  users.push_back(nickname);
-	else 
-	  users = userList(params[0]);
+		users.push_back(nickname);
+	else
+		users = userList(params[0]);
 	executeAction(action, users, message, nickname);
 }
 
@@ -250,30 +250,37 @@ void Bot::executeAction(std::string &action, std::vector<std::string> &users,
 	std::string &msg, std::string &sender)
 {
 	if (action == "!joke")
-	  msg = Jokes::getRandomJoke();
+		msg = Jokes::getRandomJoke();
 	else if (action == "!help")
 	{
-		Write("PRIVMSG " + sender + " :!msg <users>/<user1,user2,...> :<message> - Send an anonymous message a user or a list of users");
+		Write("PRIVMSG " + sender + " :!msg <users>/<user1,user2,...> :<message>
+			- Send an anonymous message a user or a list of users");
 		Write("PRIVMSG " + sender + " :!joke - Get a random joke");
-		Write("PRIVMSG " + sender + " :!joke <users>/<user1,user2,...> - Send a joke to a user or a list of users");
+		Write("PRIVMSG " + sender + " :!joke <users>/<user1,user2,...>
+			- Send a joke to a user or a list of users");
 		Write("PRIVMSG " + sender + " :!help - Display this help message");
 		return ;
 	}
 	else if (action == "!msg")
 		msg = "An anonymous user said: \"\037" + msg + "\037\"";
-	else {
+	else
+	{
 		Write("PRIVMSG " + sender + " :Command not found. !help for help");
-	  return ;
+		return ;
 	}
 	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
 	{
-	  if ((*it).find('#') != std::string::npos){
-		Write("PRIVMSG " + sender + " :\0030,04I can't send messages to channels :(");
-		continue ;
-	  }
-	  Write("PRIVMSG " + *it + " :" + msg);
-	  if (*it != sender)
-		Write("PRIVMSG " + sender + " :\002" + Tool::ToUpperCase(action.substr(1, action.size())) + " sent to " + *it);
+		if ((*it).find('#') != std::string::npos)
+		{
+			Write("PRIVMSG " + sender
+				+ " :\0030,04I can't send messages to channels :(");
+			continue ;
+		}
+		Write("PRIVMSG " + *it + " :" + msg);
+		if (*it != sender)
+			Write("PRIVMSG " + sender + " :\002"
+				+ Tool::ToUpperCase(action.substr(1, action.size()))
+				+ " sent to " + *it);
 	}
 }
 

@@ -109,7 +109,7 @@ void Channel::Write(Client *sender, const std::string &message)
 {
 	std::map<std::string, Client *>::iterator it = members_.begin();
 	if (!IsMember(sender))
-	  return ;
+		return ;
 	for (; it != members_.end(); ++it)
 	{
 		if (it->second != sender)
