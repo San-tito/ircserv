@@ -1,5 +1,8 @@
 #include "channel.h"
+#include "messages.h"
 #include <algorithm>
+#include <pthread.h>
+#include <sstream>
 
 Channel::Channel(const std::string &name) : name_(name), max_members_(0)
 {
@@ -27,6 +30,16 @@ std::string Channel::key(void) const
 void Channel::set_topic(std::string topic)
 {
 	topic_ = topic;
+}
+
+void Channel::set_key(std::string key)
+{
+	key_ = key;
+}
+
+void Channel::set_max_members(size_t max_members)
+{
+	max_members_ = max_members;
 }
 
 void Channel::AddMode(char mode)
@@ -87,7 +100,7 @@ bool Channel::IsAllowedJoin(Client *client, const std::string &key)
 		client->WritePrefix(ERR_BADCHANNELKEY(client->nickname(), key));
 		return (false);
 	}
-	if (HasMode('l') && max_members_ <= Channel::members_.size()) // ver mejor
+	if (HasMode('l') && max_members_ <= Channel::members_.size())
 	{
 		client->WritePrefix(ERR_CHANNELISFULL(client->nickname(), name_));
 		return (false);
@@ -109,7 +122,7 @@ void Channel::Write(Client *sender, const std::string &message)
 {
 	std::map<std::string, Client *>::iterator it = members_.begin();
 	if (!IsMember(sender))
-	  return ;
+	  return sender->WritePrefix(ERR_CANNOTSENDTOCHAN(sender->nickname(), name_));
 	for (; it != members_.end(); ++it)
 	{
 		if (it->second != sender)
@@ -117,52 +130,18 @@ void Channel::Write(Client *sender, const std::string &message)
 	}
 }
 
-void Channel::Mode(Client *client, const std::vector<std::string> &params)
-// falta implementar muchas cosas
+std::string Channel::modes(void) const
 {
-	char mode;
-
-	if (params.size() <= 1)
+	std::string modes;
+	std::string args;
+	std::set<char>::iterator it = modes_.begin();
+	for (; it != modes_.end(); ++it)
 	{
-		for (std::set<char>::iterator it = modes_.begin(); it != modes_.end(); ++it)
-			client->Write("MODE " + name() + " +" + *it);
-		return ;
+		modes += *it;
+		if(*it == 'k')
+		  args += " " + key_;
+		else if(*it == 'l')
+		  args += static_cast<std::ostringstream&>(std::ostringstream() << " " <<  max_members_).str();
 	}
-	for (size_t i = 1; i < params.size(); i++)
-	{
-		mode = params[i][0];
-		if (mode == '+')
-		{
-			AddMode(params[i][1]);
-		}
-		else if (mode == '-')
-		{
-			DelMode(params[i][1]);
-		}
-	}
-}
-
-void Channel::Part(Client *client, const std::string &reason)
-{
-	std::map<std::string,
-		Client *>::iterator it = members_.find(client->nickname());
-	if (it != members_.end())
-	{
-		members_.erase(it);
-		client->Write(client->mask(), "PART " + name() + " :" + reason);
-		Write(client, "PART " + name() + " :" + reason);
-	}
-}
-
-void Channel::Kick(Client *client, Client *target, const std::string &reason)
-{
-	std::map<std::string,
-		Client *>::iterator it = members_.find(target->nickname());
-	if (it != members_.end())
-	{
-		members_.erase(it);
-		Write(client, "KICK " + name() + " " + target->nickname() + " :"
-			+ reason);
-		target->Write("KICK " + name() + " :" + reason);
-	}
+	return (modes + args);
 }

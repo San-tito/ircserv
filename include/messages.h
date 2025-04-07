@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 11:41:46 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/02 18:09:14 by tuta             ###   ########.fr       */
+/*   Updated: 2025/04/07 16:55:53 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 # define ERR_UNKNOWNMODE(channel, mode, target) "472 " + (channel) + " " + (mode) + " :is unknown mode char for " + (target)
 # define ERR_INVITEONLYCHAN(target, channel) "473 " + (target) + " " + (channel) + " :Cannot join channel (+i) -- Invited clients only"
 # define ERR_BADCHANNELKEY(client, key) "475 " + (client) + " " + (key) + " :Cannot join channel (+k) -- Wrong channel key"
-# define ERR_NOCHANMODES(channel) "477 " + (channel) + " :Channel doesn't support modes"
+# define ERR_NOCHANMODES(client, channel) "477 " + (client) + " " + (channel) + " :Channel doesn't support modes"
 # define ERR_CHANOPRIVSNEEDED(channel, target) "482 " + (channel) + " " + (target) + " :You are not channel operator"
 # define ERR_CHANOPPRIVTOOLOW(channel, target) "482 " + (channel) + " " + (target) + " :Your privileges are too low"
 # define ERR_CLIENTSDONTMATCH(client) "502 " + (client) + " :Can't set/get mode for other clients"

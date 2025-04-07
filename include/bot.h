@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:00 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 13:08:22 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/07 16:17:06 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ class Bot
 	std::vector<std::string> userList(std::string users);
 
 	/*Actions*/
-	void executeAction(std::string &action, std::vector<std::string> &users,
+	void executeAction(std::string &action, std::string &users,
 		std::string &msg, std::string &sender);
 
 	int sock_;

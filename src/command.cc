@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 14:54:18 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:44:40 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,28 +92,7 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 	while (std::getline(chan_ss, chan_name, ','))
 	{
 		Channel *chan(Server::instance->channels().Search(chan_name));
-		if (chan)
-		{
-			if (chan->IsMember(client) || !chan->IsAllowedJoin(client, key))
-				continue ;
-		}
-		else if (chan_name[0] != '+')
-			op = true;
-		if (!Server::instance->channels().Join(client, chan_name))
-			continue ;
-		if (!chan)
-			chan = Server::instance->channels().Search(chan_name);
-		if (op)
-			chan->AddOperator(client);
-		chan->Write(client, name_ + " :" + chan->name());
-		client->Write(client->mask(), name_ + " :" + chan->name());
-		if (params.size() > 1)
-			std::getline(key_ss, key, ',');
-	}
-	while (std::getline(chan_ss, chan_name, ','))
-	{
-		Channel *chan(Server::instance->channels().Search(chan_name));
-		if (chan->IsMember(client))
+		if (chan && chan->IsMember(client))
 			continue ;
 		if (chan && !chan->IsAllowedJoin(client, key))
 			continue ;
@@ -312,7 +291,7 @@ void Kick::Execute(Client *client, const std::vector<std::string> &params)
 		client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(), name_));
 }
 
-Quit::Quit(void) : Command("QUIT", 0, 1, true)
+Quit::Quit(void) : Command("QUIT", 0, 1, false)
 {
 }
 
@@ -331,16 +310,12 @@ Mode::Mode(void) : Command("MODE", 1, -1, true)
 void Mode::Execute(Client *client, const std::vector<std::string> &params)
 {
 	Channel *chan(0);
-	bool is_valid_nick(Server::instance->clients().IsValidNick(params[0]));
 	bool is_valid_chan(Server::instance->channels().IsValidName(params[0]));
 	if (is_valid_chan)
 		chan = Server::instance->channels().Search(params[0]);
 	if (chan)
 		return (Server::instance->channels().Mode(client, params));
-	if (is_valid_nick)
-		client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), params[0]));
-	else
-		client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), params[0]));
+	client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), params[0]));
 }
 
 Topic::Topic(void) : Command("TOPIC", 1, 2, true)

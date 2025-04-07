@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 13:46:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 14:27:00 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/07 17:17:56 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void Client::Write(void)
 
 void Client::Write(std::string const &msg)
 {
-	Log() << "Connection " << this->socket_ << ": " << msg;
 	wbuf_ += msg + '\n';
 }
 
@@ -98,12 +97,8 @@ void Client::Request(void)
 		else
 			break ;
 		if (command.size() > COMMAND_LEN)
-		{
-			Log() << "Connection " << this->socket_ << " request too long (max ." << COMMAND_LEN << ")";
-			Server::instance->clients().CloseClient(this->socket_,
-				"Request too long");
-			return ;
-		}
+			return (Server::instance->clients().CloseClient(this->socket_,
+					"Request too long"));
 		rbuf_.clear();
 		Server::instance->parser().ProcessCommand(this, command);
 	}
@@ -113,12 +108,10 @@ void Client::Login(void)
 {
 	std::string pass(Server::instance->password());
 	if (!pass.empty() && password_ != pass)
-	{
-		Log() << "Connection " << this->socket_ << " rejected: Bad server password";
 		return (Server::instance->clients().CloseClient(this->socket_,
 				"Bad server password"));
-	}
 	registered_ = true;
+	Log() << "Connection " << socket() << ": User \"" << mask() << "\" registered";
 	WritePrefix(RPL_WELCOME(nickname_, mask()));
 	WritePrefix(RPL_YOURHOST(nickname_, Server::instance->servername(), "4.2"));
 	WritePrefix(RPL_CREATED(nickname(), Server::instance->startup_time()));
@@ -194,3 +187,4 @@ std::string Client::mask(void) const
 {
 	return (this->nickname_ + "!" + this->username_ + "@" + this->hostname_);
 }
+

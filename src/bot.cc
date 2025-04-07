@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/03 16:51:49 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/07 16:22:54 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,22 +212,24 @@ void Bot::Parser(std::string request)
 {
 	std::string command;
 	std::vector<std::string> params;
-	std::string raw_request = request;
+	std::string sender_nick = request.substr(1, request.find('!') - 1);
 
 	if (!ParseCmd(request, command))
 		return (this->Write("ERROR :Prefix without command."));
 	ParseParams(request, params);
 	if (params.size() > MAX_PARAMS)
 		return (Write("ERROR : Too many params."));
-	ParseAction(params[1], raw_request);
+	if (command == "ERROR")
+	  Log() << params[0];
+	else if (command == "PRIVMSG")
+	  ParseAction(params[1], sender_nick);
 }
 
-void Bot::ParseAction(std::string &request, std::string &raw_request)
+void Bot::ParseAction(std::string &request, std::string &nickname)
 {
 	std::string	action;
 	std::vector<std::string>	params;
-	std::string nickname = raw_request.substr(1, raw_request.find('!') - 1);
-	std::vector<std::string> users;
+	std::string users;
 	std::string message = "";
 	
 	if (!ParseCmd(request, action))
@@ -240,13 +242,13 @@ void Bot::ParseAction(std::string &request, std::string &raw_request)
 	if (action == "!msg")
 		message = params[1];
 	if (params.empty())
-	  users.push_back(nickname);
+	  users = nickname;
 	else 
-	  users = userList(params[0]);
+	  users = params[0];
 	executeAction(action, users, message, nickname);
 }
 
-void Bot::executeAction(std::string &action, std::vector<std::string> &users,
+void Bot::executeAction(std::string &action, std::string &users,
 	std::string &msg, std::string &sender)
 {
 	if (action == "!joke")
@@ -265,16 +267,7 @@ void Bot::executeAction(std::string &action, std::vector<std::string> &users,
 		Write("PRIVMSG " + sender + " :Command not found. !help for help");
 	  return ;
 	}
-	for (std::vector<std::string>::iterator it = users.begin(); it != users.end(); ++it)
-	{
-	  if ((*it).find('#') != std::string::npos){
-		Write("PRIVMSG " + sender + " :\0030,04I can't send messages to channels :(");
-		continue ;
-	  }
-	  Write("PRIVMSG " + *it + " :" + msg);
-	  if (*it != sender)
-		Write("PRIVMSG " + sender + " :\002" + Tool::ToUpperCase(action.substr(1, action.size())) + " sent to " + *it);
-	}
+	  Write("PRIVMSG " + users + " :" + msg);
 }
 
 int	main(int argc, char **argv)
