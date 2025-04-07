@@ -112,7 +112,8 @@ void CommandParser::ProcessCommand(Client *client, std::string &request)
 	ParseParams(request, params);
 	if (commands_.find(command) == commands_.end())
 	{
-		if (client->registered() && client->nickname() != "whisper") // tremenda hardcodeadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa REVISAR !!!!!!!
+		if (client->registered() && client->nickname() != "whisper")
+			// tremenda hardcodeadaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa REVISAR !!!!!!!
 			client->WritePrefix(ERR_UNKNOWNCOMMAND(client->nickname(),
 					command));
 		return ;
