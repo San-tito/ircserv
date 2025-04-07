@@ -149,7 +149,7 @@ void Channel::Part(Client *client, const std::string &reason)
 	if (it != members_.end())
 	{
 		members_.erase(it);
-		client->Write("PART " + name() + " :" + reason);
+		client->Write(client->mask(), "PART " + name() + " :" + reason);
 		Write(client, "PART " + name() + " :" + reason);
 	}
 }

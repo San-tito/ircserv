@@ -54,7 +54,7 @@ void ChannelManager::Mode(Client *client,
 	channel = Search(params[0]);
 	if (!channel)
 	{
-		// client->WriteErr(ERR_NOSUCHCHANNEL(client->getNick(), params[0]));
+		client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), params[0]));
 		return ;
 	}
 	channel->Mode(client, params);
@@ -92,7 +92,7 @@ void ChannelManager::Part(Client *client, const std::string &channelName,
 	channel = Search(channelName);
 	if (!channel)
 	{
-		// client->WriteErr(ERR_NOSUCHCHANNEL(client->getNick(), channelName));
+		client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), channelName));
 		return ;
 	}
 	channel->Part(client, reason);
