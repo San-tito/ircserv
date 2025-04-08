@@ -49,74 +49,82 @@ void ChannelManager::RemoveChannel(const std::string &name)
 void ChannelManager::Mode(Client *client,
 	const std::vector<std::string> &params)
 {
-	Channel *channel;
+	Channel	*channel;
+	Client	*target;
 
 	channel = Search(params[0]);
 	if (!channel)
-		return client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(), params[0]));
-	if(channel->name()[0] == '+')
-	  return client->WritePrefix(ERR_NOCHANMODES(client->nickname(), params[0]));
+		return (client->WritePrefix(ERR_NOSUCHCHANNEL(client->nickname(),
+					params[0])));
+	if (channel->name()[0] == '+')
+		return (client->WritePrefix(ERR_NOCHANMODES(client->nickname(),
+					params[0])));
 	if (params.size() <= 1)
-	 return client->WritePrefix(RPL_CHANNELMODEIS(client->nickname(),
-				channel->name(), channel->modes()));
+		return (client->WritePrefix(RPL_CHANNELMODEIS(client->nickname(),
+					channel->name(), channel->modes())));
 	if (!channel->IsOperator(client))
-	  return client->WritePrefix(ERR_CHANOPRIVSNEEDED(client->nickname(),
-				channel->name()));
-  
+		return (client->WritePrefix(ERR_CHANOPRIVSNEEDED(client->nickname(),
+					channel->name())));
 	long l(0);
 	std::string the_modes;
 	std::string the_args;
-	Client *target;
-
 	for (size_t i = 1; i < params.size(); i++)
 	{
-		bool set(false);
-		if(params[i][0] == '+')
-		  set = true;
-		else if (params[i][0] != '-')
-		  return client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(), "MODE"));
-		switch (params[i][1])
+		bool set;
+		char mode(params[i][0]);
+		if (mode == '+')
+			set = true;
+		else if (mode == '-')
+			set = false;
+		mode = params[i][1];
+		if (mode == 'o')
 		{
-		  case 'o':
 			if (i + 1 >= params.size())
 			{
-			  client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(), "MODE"));
-			  break;
+				client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(),
+						"MODE"));
+				break ;
 			}
 			target = Server::instance->clients().Search(params[i + 1]);
 			if (!target)
 			{
-			  client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), params[i + 1]));
-			  break;
+				client->WritePrefix(ERR_NOSUCHNICK(client->nickname(), params[i
+						+ 1]));
+				break ;
 			}
 			if (!channel->IsMember(target))
 			{
-			  client->WritePrefix(ERR_NOTONCHANNEL(client->nickname(), channel->name()));
-			  break;
+				client->WritePrefix(ERR_NOTONCHANNEL(client->nickname(),
+						channel->name()));
+				break ;
 			}
 			set ? channel->AddOperator(target) : channel->RemoveOperator(target);
 			the_modes += (set ? std::string("+") : std::string("-")) + "o";
 			the_args += " " + target->nickname();
-			break;
-		  case 'i':
+		}
+		else if (mode == 'i')
+		{
 			set ? channel->AddMode('i') : channel->DelMode('i');
 			the_modes += (set ? std::string("+") : std::string("-")) + "i";
-			break;
-		  case 't':
+		}
+		else if (mode == 't')
+		{
 			set ? channel->AddMode('t') : channel->DelMode('t');
 			the_modes += (set ? std::string("+") : std::string("-")) + "t";
-			break;
-		  case 'k':
+		}
+		else if (mode == 'k')
+		{
 			if (!set)
 			{
-			  channel->DelMode('k');
-			  the_modes += "-k";
-			  break;
+				channel->DelMode('k');
+				the_modes += "-k";
+				continue ;
 			}
 			if (i + 1 >= params.size())
 			{
-			  client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(), "MODE"));
-			  break;
+				client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(),
+						"MODE"));
+				break ;
 			}
 			channel->DelMode('k');
 			channel->set_key(params[i + 1]);
@@ -124,25 +132,27 @@ void ChannelManager::Mode(Client *client,
 			the_modes += "+k";
 			the_args += " " + params[i + 1];
 			i++;
-			break;
-		  case 'l':
+		}
+		else if (mode == 'l')
+		{
 			if (!set)
 			{
-			  channel->DelMode('l');
-			  the_modes += "-l";
-			  break;
+				channel->DelMode('l');
+				the_modes += "-l";
+				break ;
 			}
 			if (i + 1 >= params.size())
 			{
-			  client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(), "MODE"));
-			  break;
+				client->WritePrefix(ERR_NEEDMOREPARAMS(client->nickname(),
+						"MODE"));
+				break ;
 			}
 			l = std::atol(params[i + 1].c_str());
 			if (l <= 0 || l >= 0xFFFF)
 			{
-			  client->WritePrefix(ERR_INVALIDMODEPARAM(client->nickname(),
-					  channel->name(), "l"));
-			  break;
+				client->WritePrefix(ERR_INVALIDMODEPARAM(client->nickname(),
+						channel->name(), "l"));
+				break ;
 			}
 			channel->DelMode('l');
 			channel->set_max_members(l);
@@ -150,17 +160,17 @@ void ChannelManager::Mode(Client *client,
 			the_modes += "+l";
 			the_args += " " + params[i + 1];
 			i++;
-			break;
-		  default:
+		}
+		else
 			client->WritePrefix(ERR_UNKNOWNMODE(client->nickname(),
 					channel->name(), params[i][1]));
-			break;
-		}
 	}
-	if(!the_modes.empty())
+	if (!the_modes.empty())
 	{
-	  client->Write(client->mask(), "MODE " + channel->name() + " " + the_modes + the_args);
-	  channel->Write(client, "MODE " + channel->name() + " " + the_modes + the_args);
+		client->Write(client->mask(), "MODE " + channel->name() + " "
+			+ the_modes + the_args);
+		channel->Write(client, "MODE " + channel->name() + " " + the_modes
+			+ the_args);
 	}
 }
 
@@ -208,7 +218,7 @@ void ChannelManager::PartAll(Client *client)
 {
 	std::map<std::string, Channel *>::iterator it = channels_.begin();
 	for (; it != channels_.end(); ++it)
-	  Part(client, it->first, "");
+		Part(client, it->first, "");
 }
 
 void ChannelManager::Kick(Client *client, const std::string &nick,
@@ -230,7 +240,9 @@ void ChannelManager::Kick(Client *client, const std::string &nick,
 	if (!chan->IsOperator(client))
 		return (client->WritePrefix(ERR_CHANOPPRIVTOOLOW(client->nickname(),
 					channelName)));
-	client->Write(client->mask(), "KICK " + channelName + " " + target->nickname() + " :" + reason);
-	chan->Write(client, "KICK " + channelName + " " + target->nickname() + " :" + reason);
+	client->Write(client->mask(), "KICK " + channelName + " "
+		+ target->nickname() + " :" + reason);
+	chan->Write(client, "KICK " + channelName + " " + target->nickname() + " :"
+		+ reason);
 	chan->RemoveMember(target);
 }

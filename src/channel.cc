@@ -59,7 +59,7 @@ void Channel::DelMode(char mode)
 
 void Channel::AddInvite(Client *client)
 {
-	invites_[client->nickname()] = client;
+	invites_[client->nickname()] = client; // borrar de la lista de invitados ->part ->kick
 }
 
 bool Channel::IsMember(Client *client) const

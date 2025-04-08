@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/07 17:44:40 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/08 21:59:47 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void Invite::Execute(Client *client, const std::vector<std::string> &params)
 			chan->AddInvite(target);
 	}
 	Log() << "Client " << client->nickname() << " invites " << params[0] << " to " << params[1];
-	target->Write("INVITE " + params[0] + " " + params[1]);
-	target->WritePrefix(RPL_INVITING(target->nickname(), params[0], params[1]));
+	client->WritePrefix(RPL_INVITING(client->nickname(), params[0], params[1]));
+	target->Write(client->mask(), "INVITE " + params[0] + " " + params[1]);
 }
 
 Join::Join(void) : Command("JOIN", 1, 2, true)
