@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/09 14:45:16 by naomy            ###   ########.fr       */
+/*   Updated: 2025/04/09 14:46:30 by naomy            ###   ########.fr       */
 /*   Updated: 2025/04/07 15:48:11 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -234,11 +234,9 @@ void Bot::executeAction(std::string &action, std::string &users,
 		msg = Jokes::getRandomJoke();
 	else if (action == "!help")
 	{
-		Write("PRIVMSG " + sender + " :!msg <users>/<user1,user2,...> :<message>
-			- Send an anonymous message a user or a list of users");
+		Write("PRIVMSG " + sender + " :!msg <users>/<user1,user2,...> :<message> - Send an anonymous message a user or a list of users");
 		Write("PRIVMSG " + sender + " :!joke - Get a random joke");
-		Write("PRIVMSG " + sender + " :!joke <users>/<user1,user2,...>
-			- Send a joke to a user or a list of users");
+		Write("PRIVMSG " + sender + " :!joke <users>/<user1,user2,...> - Send a joke to a user or a list of users");
 		Write("PRIVMSG " + sender + " :!help - Display this help message");
 		return ;
 	}
