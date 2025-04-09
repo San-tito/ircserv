@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/07 18:19:57 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/09 14:45:16 by naomy            ###   ########.fr       */
 /*   Updated: 2025/04/07 15:48:11 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -68,7 +68,8 @@ std::string Bot::Read(void)
 	ssize_t	len;
 	char	buf[READBUFFER_LEN];
 
-	len = recv(this->sock_, buf, READBUFFER_LEN, MSG_WAITALL);
+	len = read(this->sock_, buf, READBUFFER_LEN);
+	Log() << buf;
 	if (len == 0)
 	{
 		Log() << "Server close connection";
@@ -133,29 +134,6 @@ void Bot::SignalHandler(int sig)
 	}
 }
 
-std::vector<std::string> Bot::userList(std::string users)
-{
-	size_t	pos;
-
-	std::vector<std::string> users_;
-	Tool::Trim(users);
-	while (!users.empty())
-	{
-		pos = users.find(',');
-		if (pos != std::string::npos)
-		{
-			users_.push_back(users.substr(0, pos));
-			users = users.substr(pos + 1);
-		}
-		else
-		{
-			users_.push_back(users);
-			break ;
-		}
-	}
-	return (users_);
-}
-
 void Bot::ParseParams(std::string &request, std::vector<std::string> &params)
 {
 	size_t	pos;
@@ -214,22 +192,21 @@ void Bot::Parser(std::string request)
 	std::string command;
 	std::vector<std::string> params;
 	std::string sender_nick = request.substr(1, request.find('!') - 1);
-
 	if (!ParseCmd(request, command))
 		return (this->Write("ERROR :Prefix without command."));
 	ParseParams(request, params);
 	if (params.size() > MAX_PARAMS)
 		return (Write("ERROR : Too many params."));
 	if (command == "ERROR")
-	  Log() << params[0];
+		Log() << params[0];
 	else if (command == "PRIVMSG")
-	  ParseAction(params[1], sender_nick);
+		ParseAction(params[1], sender_nick);
 }
 
 void Bot::ParseAction(std::string &request, std::string &nickname)
 {
-	std::string	action;
-	std::vector<std::string>	params;
+	std::string action;
+	std::vector<std::string> params;
 	std::string users;
 	std::string message = "";
 	if (!ParseCmd(request, action))
@@ -244,9 +221,9 @@ void Bot::ParseAction(std::string &request, std::string &nickname)
 	if (action == "!msg")
 		message = params[1];
 	if (params.empty())
-	  users = nickname;
-	else 
-	  users = params[0];
+		users = nickname;
+	else
+		users = params[0];
 	executeAction(action, users, message, nickname);
 }
 
@@ -257,8 +234,11 @@ void Bot::executeAction(std::string &action, std::string &users,
 		msg = Jokes::getRandomJoke();
 	else if (action == "!help")
 	{
-		Write("PRIVMSG " + sender + " :!msg <users>/<user1,user2,...> :<message> - Send an anonymous message a user or a list of users");
-		Write("PRIVMSG " + sender + " :!joke - Get a random joke"); Write("PRIVMSG " + sender + " :!joke <users>/<user1,user2,...> - Send a joke to a user or a list of users");
+		Write("PRIVMSG " + sender + " :!msg <users>/<user1,user2,...> :<message>
+			- Send an anonymous message a user or a list of users");
+		Write("PRIVMSG " + sender + " :!joke - Get a random joke");
+		Write("PRIVMSG " + sender + " :!joke <users>/<user1,user2,...>
+			- Send a joke to a user or a list of users");
 		Write("PRIVMSG " + sender + " :!help - Display this help message");
 		return ;
 	}
@@ -269,7 +249,7 @@ void Bot::executeAction(std::string &action, std::string &users,
 		Write("PRIVMSG " + sender + " :Command not found. !help for help");
 		return ;
 	}
-	  Write("PRIVMSG " + users + " :" + msg);
+	Write("PRIVMSG " + users + " :" + msg);
 }
 
 int	main(int argc, char **argv)
