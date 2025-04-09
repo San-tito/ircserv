@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/09 14:46:30 by naomy            ###   ########.fr       */
+/*   Updated: 2025/04/09 14:48:59 by naomy            ###   ########.fr       */
 /*   Updated: 2025/04/07 15:48:11 by ncastell         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -68,8 +68,7 @@ std::string Bot::Read(void)
 	ssize_t	len;
 	char	buf[READBUFFER_LEN];
 
-	len = read(this->sock_, buf, READBUFFER_LEN);
-	Log() << buf;
+	len = recv(this->sock_, buf, READBUFFER_LEN, 0);
 	if (len == 0)
 	{
 		Log() << "Server close connection";
