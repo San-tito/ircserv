@@ -6,8 +6,6 @@
 # include <string>
 # include <vector>
 
-class	Channel;
-
 class ChannelManager
 {
   public:
