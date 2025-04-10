@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/01 18:27:18 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/10 11:19:52 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,30 @@ ClientManager::ClientManager(void)
 
 ClientManager::~ClientManager(void)
 {
-	std::map<int, Client *>::iterator it(clients.begin());
-	for (; it != clients.end(); it++)
+	std::map<int, Client *>::iterator it(clients_.begin());
+	for (; it != clients_.end(); it++)
 		delete (it->second);
 }
 
 void ClientManager::AddClient(int fd)
 {
-	clients[fd] = new Client(fd);
+	clients_[fd] = new Client(fd);
 	Server::instance->events().AddClientSession(fd, POLLIN);
+}
+
+void ClientManager::RemoveClient(Client *client)
+{
+	Server::instance->events().DelEvent(client->socket());
+	Server::instance->channels().PartAll(client);
+	clients_.erase(client->socket());
+	delete (client);
 }
 
 void ClientManager::CloseClient(int fd, const std::string &message)
 {
 	Client	*client;
 
-	client = clients[fd];
+	client = clients_[fd];
 	client->set_closing(true);
 	client->Write("ERROR :Closing connection: " + message);
 	Log() << "Connection " << fd << " closed: " << message;
@@ -42,8 +50,8 @@ void ClientManager::CloseClient(int fd, const std::string &message)
 
 Client *ClientManager::Search(const std::string &name)
 {
-	std::map<int, Client *>::iterator it(clients.begin());
-	for (; it != clients.end(); it++)
+	std::map<int, Client *>::iterator it(clients_.begin());
+	for (; it != clients_.end(); it++)
 	{
 		if ((it->second)->nickname() == name)
 			return (it->second);
@@ -53,8 +61,8 @@ Client *ClientManager::Search(const std::string &name)
 
 void ClientManager::Read(void)
 {
-	std::map<int, Client *>::iterator it(clients.begin());
-	while (it != clients.end())
+	std::map<int, Client *>::iterator it(clients_.begin());
+	while (it != clients_.end())
 	{
 		Client *client(it->second);
 		++it;
@@ -65,13 +73,13 @@ void ClientManager::Read(void)
 
 void ClientManager::Read(int fd)
 {
-	clients[fd]->Read();
+	clients_[fd]->Read();
 }
 
 void ClientManager::Write(void)
 {
-	std::map<int, Client *>::iterator it(clients.begin());
-	while (it != clients.end())
+	std::map<int, Client *>::iterator it(clients_.begin());
+	while (it != clients_.end())
 	{
 		Client *client(it->second);
 		it++;
@@ -82,15 +90,15 @@ void ClientManager::Write(void)
 
 void ClientManager::Write(int fd)
 {
-	clients[fd]->Write();
+	clients_[fd]->Write();
 	Server::instance->events().UnmaskEvent(fd, POLLOUT);
 }
 
 void ClientManager::CheckTimeouts(void)
 {
 	time_t now(time(NULL));
-	std::map<int, Client *>::iterator it(clients.begin());
-	while (it != clients.end())
+	std::map<int, Client *>::iterator it(clients_.begin());
+	while (it != clients_.end())
 	{
 		Client *client(it->second);
 		++it;
@@ -101,17 +109,13 @@ void ClientManager::CheckTimeouts(void)
 
 void ClientManager::Close(void)
 {
-	std::map<int, Client *>::iterator it(clients.begin());
-	while (it != clients.end())
+	std::map<int, Client *>::iterator it(clients_.begin());
+	while (it != clients_.end())
 	{
 		Client *client(it->second);
 		it++;
 		if (client->closing())
-		{
-			Server::instance->events().DelEvent(client->socket());
-			clients.erase(client->socket());
-			delete (client);
-		}
+			RemoveClient(client);
 	}
 }
 

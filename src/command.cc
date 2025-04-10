@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/07 17:44:40 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/10 10:45:02 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,11 @@ void Join::Execute(Client *client, const std::vector<std::string> &params)
 	while (std::getline(chan_ss, chan_name, ','))
 	{
 		Channel *chan(Server::instance->channels().Search(chan_name));
-		if (chan && chan->IsMember(client))
-			continue ;
-		if (chan && !chan->IsAllowedJoin(client, key))
-			continue ;
+		if(chan)
+		{
+			if(chan->IsMember(client) || !chan->IsAllowedJoin(client, key))
+				continue;
+		}
 		if (!chan && chan_name[0] != '+')
 			op = true;
 		if (!Server::instance->channels().Join(client, chan_name))

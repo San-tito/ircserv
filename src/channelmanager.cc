@@ -36,14 +36,10 @@ bool ChannelManager::AddChannel(Channel *channel)
 	return (true);
 }
 
-void ChannelManager::RemoveChannel(const std::string &name)
+void ChannelManager::RemoveChannel(Channel *channel)
 {
-	std::map<std::string, Channel *>::iterator it = channels_.find(name);
-	if (it != channels_.end())
-	{
-		delete it->second;
-		channels_.erase(it);
-	}
+	channels_.erase(channel->name());
+	delete (channel);
 }
 
 void ChannelManager::Mode(Client *client,

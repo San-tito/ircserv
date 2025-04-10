@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 21:15:25 by ncastell         ###   ########.fr       */
+/*   Updated: 2025/04/10 11:14:47 by sguzman          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ class ClientManager
 	~ClientManager(void);
 
 	void AddClient(int fd);
+	void RemoveClient(Client *client);
 	void CloseClient(int fd, const std::string &message);
 	Client *Search(const std::string &name);
 	bool IsValidNick(std::string nick);
@@ -38,7 +39,7 @@ class ClientManager
 	void Close(void);
 
   private:
-	std::map<int, Client *> clients;
+	std::map<int, Client *> clients_;
 };
 
 #endif /* CLIENTMANAGER_H */

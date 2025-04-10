@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   channel.cc                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sguzman <sguzman@student.42barcelona.com>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/10 11:19:06 by sguzman           #+#    #+#             */
+/*   Updated: 2025/04/10 11:19:19 by sguzman          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "channel.h"
 #include "messages.h"
-#include <algorithm>
-#include <pthread.h>
+#include "server.h"
 #include <sstream>
 
 Channel::Channel(const std::string &name) : name_(name), max_members_(0)
@@ -81,6 +92,8 @@ void Channel::RemoveMember(Client *client)
 {
 	members_.erase(client->nickname());
 	operators_.erase(client->nickname());
+	if (members_.empty())
+		Server::instance->channels().RemoveChannel(this);
 }
 
 bool Channel::IsOperator(Client *client) const
@@ -122,7 +135,8 @@ void Channel::Write(Client *sender, const std::string &message)
 {
 	std::map<std::string, Client *>::iterator it = members_.begin();
 	if (!IsMember(sender))
-	  return sender->WritePrefix(ERR_CANNOTSENDTOCHAN(sender->nickname(), name_));
+		return (sender->WritePrefix(ERR_CANNOTSENDTOCHAN(sender->nickname(),
+					name_)));
 	for (; it != members_.end(); ++it)
 	{
 		if (it->second != sender)
@@ -138,10 +152,11 @@ std::string Channel::modes(void) const
 	for (; it != modes_.end(); ++it)
 	{
 		modes += *it;
-		if(*it == 'k')
-		  args += " " + key_;
-		else if(*it == 'l')
-		  args += static_cast<std::ostringstream&>(std::ostringstream() << " " <<  max_members_).str();
+		if (*it == 'k')
+			args += " " + key_;
+		else if (*it == 'l')
+			args
+				+= static_cast<std::ostringstream &>(std::ostringstream() << " " << max_members_).str();
 	}
 	return (modes + args);
 }
