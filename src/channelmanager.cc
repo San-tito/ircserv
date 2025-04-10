@@ -86,6 +86,12 @@ void ChannelManager::Mode(Client *client,
 		const std::string &mode_str(params[mode_arg_index]);
 		std::string::size_type mode_pos(skip_first ? 0 : 1);
 		skip_first = false;
+		if (!channel->IsOperator(client))
+		{
+			client->WritePrefix(ERR_CHANOPRIVSNEEDED(client->nickname(),
+					channel->name()));
+			break ;
+		}
 		for (; mode_pos < mode_str.length(); ++mode_pos)
 		{
 			const char mode_char(mode_str[mode_pos]);
@@ -111,19 +117,9 @@ void ChannelManager::Mode(Client *client,
 			{
 			case 'i':
 			case 't':
-				if (channel->IsOperator(client))
-					valid_mode = true;
-				else
-					client->WritePrefix(ERR_CHANOPRIVSNEEDED(client->nickname(),
-							channel->name()));
+				valid_mode = true;
 				break ;
 			case 'k':
-				if (!channel->IsOperator(client))
-				{
-					client->WritePrefix(ERR_CHANOPRIVSNEEDED(client->nickname(),
-							channel->name()));
-					break ;
-				}
 				if (!is_adding)
 				{
 					valid_mode = true;
@@ -149,12 +145,6 @@ void ChannelManager::Mode(Client *client,
 				}
 				break ;
 			case 'l':
-				if (!channel->IsOperator(client))
-				{
-					client->WritePrefix(ERR_CHANOPRIVSNEEDED(client->nickname(),
-							channel->name()));
-					break ;
-				}
 				if (!is_adding)
 					valid_mode = true;
 				else
@@ -175,12 +165,6 @@ void ChannelManager::Mode(Client *client,
 				}
 				break ;
 			case 'o':
-				if (!channel->IsOperator(client))
-				{
-					client->WritePrefix(ERR_CHANOPRIVSNEEDED(client->nickname(),
-							channel->name()));
-					break ;
-				}
 				if (mode_param_index != static_cast<size_t>(-1)
 					&& mode_param_index < params.size())
 				{
@@ -206,7 +190,6 @@ void ChannelManager::Mode(Client *client,
 			default:
 				client->WritePrefix(ERR_UNKNOWNMODE(client->nickname(),
 						channel->name(), std::string(1, mode_char)));
-				break ;
 			}
 			if (valid_mode)
 			{
