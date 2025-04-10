@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:28:37 by sguzman           #+#    #+#             */
-/*   Updated: 2025/03/27 16:43:35 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/10 13:51:14 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void Server::Run(void)
 {
 	while (true)
 	{
+		channels_.Clean();
 		clients_.Close();
 		clients_.CheckTimeouts();
 		clients_.Read();

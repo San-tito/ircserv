@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 23:42:02 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/10 13:01:14 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:42:59 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ class Channel
 	bool IsOperator(Client *client) const;
 	bool IsAllowedJoin(Client *client, const std::string &key);
 
+	size_t  members_count(void) const;
 	std::string modes(void) const;
 	std::string name(void) const;
 	std::string topic(void) const;

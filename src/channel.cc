@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:19:06 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/10 13:02:13 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:47:56 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,6 @@ void Channel::RemoveMember(Client *client)
 {
 	members_.erase(client->socket());
 	operators_.erase(client->socket());
-	if (members_.empty())
-		Server::instance->channels().RemoveChannel(this);
 }
 
 bool Channel::IsOperator(Client *client) const
@@ -159,4 +157,9 @@ std::string Channel::modes(void) const
 				+= static_cast<std::ostringstream &>(std::ostringstream() << " " << max_members_).str();
 	}
 	return (modes + args);
+}
+
+size_t Channel::members_count(void) const
+{
+	return (members_.size());
 }

@@ -14,6 +14,7 @@ class ChannelManager
 
 	Channel *Search(const std::string &name);
 	bool AddChannel(Channel *channel);
+	void Clean(void);
 	bool IsValidName(const std::string &name);
 	void RemoveChannel(Channel *channel);
 	void Mode(Client *client, const std::vector<std::string> &params);

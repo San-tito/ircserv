@@ -42,8 +42,8 @@ void ChannelManager::RemoveChannel(Channel *channel)
 		Channel *>::iterator it = channels_.find(channel->name());
 	if (it != channels_.end())
 	{
-		delete it->second;
 		channels_.erase(it);
+		delete it->second;
 	}
 }
 
@@ -313,4 +313,16 @@ void ChannelManager::Kick(Client *client, const std::string &nick,
 	chan->Write(client, "KICK " + channelName + " " + target->nickname() + " :"
 		+ reason);
 	chan->RemoveMember(target);
+}
+
+void ChannelManager::Clean(void)
+{
+	std::map<std::string, Channel *>::iterator it(channels_.begin());
+	while (it != channels_.end())
+	{
+		Channel *channel(it->second);
+		it++;
+		if (channel->members_count() == 0)
+		  RemoveChannel(channel);
+	}
 }

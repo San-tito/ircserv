@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/10 13:09:21 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:27:36 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,14 @@ void ClientManager::RemoveClient(Client *client)
 
 void ClientManager::CloseClient(int fd, const std::string &message)
 {
-	Client	*client;
-
-	client = clients_[fd];
-	client->set_closing(true);
-	client->Write("ERROR :Closing connection: " + message);
-	Log() << "Connection " << fd << " closed: " << message;
+	std::map<int, Client *>::iterator it(clients_.find(fd));
+	if (it != clients_.end())
+	{
+		Client *client(it->second);
+		client->set_closing(true);
+		client->Write("ERROR :Closing connection: " + message);
+		Log() << "Connection " << fd << " closed: " << message;
+	}
 }
 
 Client *ClientManager::Search(const std::string &name)
