@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 23:42:02 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/07 17:44:09 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:01:14 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ class Channel
 	std::string key_;
 	size_t max_members_;
 	std::set<char> modes_;
-	std::map<std::string, Client *> members_;
-	std::map<std::string, Client *> invites_;
-	std::map<std::string, Client *> operators_;
+	std::map<int, Client *> members_;
+	std::map<int, Client *> invites_;
+	std::map<int, Client *> operators_;
 };
 #endif /* CHANNEL_H */

@@ -6,7 +6,7 @@
 /*   By: sguzman <sguzman@student.42barcelona.com>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 11:19:06 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/10 11:19:19 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/10 13:02:13 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,35 +70,35 @@ void Channel::DelMode(char mode)
 
 void Channel::AddInvite(Client *client)
 {
-	invites_[client->nickname()] = client;
+	invites_[client->socket()] = client;
 }
 
 bool Channel::IsMember(Client *client) const
 {
-	return (members_.find(client->nickname()) != members_.end());
+	return (members_.find(client->socket()) != members_.end());
 }
 
 bool Channel::IsInvited(Client *client) const
 {
-	return (invites_.find(client->nickname()) != invites_.end());
+	return (invites_.find(client->socket()) != invites_.end());
 }
 
 void Channel::AddMember(Client *client)
 {
-	members_[client->nickname()] = client;
+	members_[client->socket()] = client;
 }
 
 void Channel::RemoveMember(Client *client)
 {
-	members_.erase(client->nickname());
-	operators_.erase(client->nickname());
+	members_.erase(client->socket());
+	operators_.erase(client->socket());
 	if (members_.empty())
 		Server::instance->channels().RemoveChannel(this);
 }
 
 bool Channel::IsOperator(Client *client) const
 {
-	return (operators_.find(client->nickname()) != operators_.end());
+	return (operators_.find(client->socket()) != operators_.end());
 }
 
 bool Channel::IsAllowedJoin(Client *client, const std::string &key)
@@ -123,17 +123,17 @@ bool Channel::IsAllowedJoin(Client *client, const std::string &key)
 
 void Channel::AddOperator(Client *client)
 {
-	operators_[client->nickname()] = client;
+	operators_[client->socket()] = client;
 }
 
 void Channel::RemoveOperator(Client *client)
 {
-	operators_.erase(client->nickname());
+	operators_.erase(client->socket());
 }
 
 void Channel::Write(Client *sender, const std::string &message)
 {
-	std::map<std::string, Client *>::iterator it = members_.begin();
+	std::map<int, Client *>::iterator it = members_.begin();
 	if (!IsMember(sender))
 		return (sender->WritePrefix(ERR_CANNOTSENDTOCHAN(sender->nickname(),
 					name_)));

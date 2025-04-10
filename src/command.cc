@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:00:15 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/10 12:31:33 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:09:41 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,10 +160,9 @@ void Nick::Execute(Client *client, const std::vector<std::string> &params)
 	}
 	else
 	{
-	  std::string message(name_ + " :" + params[0]);
+		std::string message(name_ + " :" + params[0]);
 		Log() << "Connection " << client->socket() << ": changed nickname to " << params[0];
 		client->Write(client->mask(), message);
-		Server::instance->clients().Broadcast(client, message);
 		client->set_nickname(params[0]);
 	}
 }

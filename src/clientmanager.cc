@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 01:44:03 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/10 12:39:23 by bautrodr         ###   ########.fr       */
+/*   Updated: 2025/04/10 13:09:21 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,14 +126,4 @@ bool ClientManager::IsValidNick(std::string nick)
 	if (nick.find_first_not_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789[]\\`_^{|}-") != std::string::npos)
 		return (false);
 	return (true);
-}
-
-void ClientManager::Broadcast(Client *client,
-	const std::string &message)
-{
-	for (std::map<int, Client *>::iterator it = clients_.begin();
-		it != clients_.end(); ++it)
-	{
-		it->second->Write(client->mask(), message);
-	}
 }
