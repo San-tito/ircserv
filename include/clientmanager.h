@@ -6,7 +6,7 @@
 /*   By: ncastell <ncastell@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 23:02:45 by sguzman           #+#    #+#             */
-/*   Updated: 2025/04/10 11:14:47 by sguzman          ###   ########.fr       */
+/*   Updated: 2025/04/10 12:30:33 by bautrodr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ class ClientManager
 	void Write(int fd);
 	void CheckTimeouts(void);
 	void Close(void);
+	void Broadcast(Client *client,
+	const std::string &message);
 
   private:
 	std::map<int, Client *> clients_;
