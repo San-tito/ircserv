@@ -38,8 +38,13 @@ bool ChannelManager::AddChannel(Channel *channel)
 
 void ChannelManager::RemoveChannel(Channel *channel)
 {
-	channels_.erase(channel->name());
-	delete (channel);
+	std::map<std::string,
+		Channel *>::iterator it = channels_.find(channel->name());
+	if (it != channels_.end())
+	{
+		delete it->second;
+		channels_.erase(it);
+	}
 }
 
 void ChannelManager::Mode(Client *client,
